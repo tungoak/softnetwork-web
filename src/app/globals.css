@@ -1,26 +1,67 @@
 @import "tailwindcss";
 
+/* ลื่นเวลาเลื่อน */
+html { scroll-behavior: smooth; }
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --sn-blue: #3B82F6;
+  --sn-orange: #F59E0B;
+  --sn-dark: #0F172A;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    font-family: var(--font-sarabun, ui-sans-serif, system-ui);
+    @apply bg-white text-slate-800 antialiased;
+    font-size: 16px;
+    line-height: 1.7;
   }
+  h1,h2,h3,h4 {
+    font-family: var(--font-prompt, ui-sans-serif, system-ui);
+    @apply text-slate-900 leading-tight;
+  }
+  h1 { @apply font-black; }
+  h2 { @apply font-extrabold; }
+  p  { @apply leading-relaxed; }
+  a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-sm; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* คุม container */
+.container { @apply max-w-7xl mx-auto px-4 lg:px-8; }
+
+/* โลโก้คำว่า SoftNetwork — S ส้ม, N น้ำเงิน */
+.sn-brand { @apply font-bold tracking-wide; }
+.sn-brand .s { color:#F59E0B; }
+.sn-brand .n { color:#3B82F6; }
+.sn-brand .rest { @apply text-slate-900; }
+.on-dark .rest { @apply text-white; }
+
+/* เส้นใต้เวลา hover เมนูบนเดสก์ท็อป */
+.nav-underline [data-role="navlink"]{
+  position: relative;
+}
+.nav-underline [data-role="navlink"]::after{
+  content:""; position:absolute; left:0; bottom:-6px; height:2px; width:0;
+  background:#F59E0B; transition:width .25s ease;
+}
+.nav-underline [data-role="navlink"]:hover::after{
+  width:100%;
+}
+
+/* พื้นหลัง section แบบ gradient */
+.section-gradient-blue { background: linear-gradient(145deg, #E0F2FE, #DBEAFE); }
+.section-gradient-orange{ background: linear-gradient(145deg, #FFF7ED, #FFFBEB); }
+.section-solid-blue    { background:#3B82F6; color:#fff; }
+.section-solid-blue h2,.section-solid-blue p{ color:#fff; }
+
+/* การ์ดหลัก */
+.card-base{
+  @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.card-base:hover{ transform: translateY(-4px); box-shadow:0 12px 28px rgba(16,24,40,.12); }
+
+/* กล่องเบลอแบบ glass */
+.glass-panel {
+  @apply rounded-3xl border border-white/60 bg-white/40 backdrop-blur-md shadow-lg;
 }

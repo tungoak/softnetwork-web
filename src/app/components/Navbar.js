@@ -11,13 +11,13 @@ const links = [
   { id: "contact", label: "Contact" },
 ];
 
-export default function Navbar(){
+export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const go = (id) => {
     const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior:"smooth", block:"start" });
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
     setOpen(false);
   };
@@ -40,11 +40,15 @@ export default function Navbar(){
             <span className="text-xs font-extrabold text-white">SN</span>
           </div>
           <div className="leading-tight text-left">
-            <span className="sn-brand text-sm md:text-base">
-              <span className="s">S</span><span className="rest">oft</span>
-              <span className="n">N</span><span className="rest">etwork</span>
+            <span className="sn-brand text-base md:text-lg">
+              <span className="s">S</span>
+              <span className="rest">oft</span>
+              <span className="n">N</span>
+              <span className="rest">etwork</span>
             </span>
-            <div className="text-[11px] text-slate-500">Software Studio</div>
+            <div className="text-[11px] text-slate-500">
+              Software Studio for Modern Business
+            </div>
           </div>
         </button>
 
@@ -72,7 +76,7 @@ export default function Navbar(){
             ติดต่อเรา
           </button>
           <button
-            onClick={() => setOpen(o => !o)}
+            onClick={() => setOpen((o) => !o)}
             className="md:hidden inline-flex items-center justify-center rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white/80"
           >
             {open ? "Close" : "Menu"}

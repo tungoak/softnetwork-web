@@ -1,67 +1,131 @@
 @import "tailwindcss";
 
-/* ลื่นเวลาเลื่อน */
-html { scroll-behavior: smooth; }
+/* ให้เลื่อนแบบนุ่มนวลเวลา click anchor (#about ฯลฯ) */
+html {
+  scroll-behavior: smooth;
+}
 
+/* สีหลักของแบรนด์ */
 :root {
-  --sn-blue: #3B82F6;
-  --sn-orange: #F59E0B;
+  --sn-blue: #3B82F6;   /* 3B82F6 */
+  --sn-orange: #F59E0B; /* F59E0B */
   --sn-dark: #0F172A;
 }
 
+/* ---------- Base Typography ---------- */
 @layer base {
   body {
-    font-family: var(--font-sarabun, ui-sans-serif, system-ui);
+    font-family: "TH Sarabun New", "TH Sarabun PSK", "TH Sarabun IT๙",
+      var(--font-sarabun), ui-sans-serif, system-ui, -apple-system,
+      "Segoe UI", sans-serif;
     @apply bg-white text-slate-800 antialiased;
     font-size: 16px;
-    line-height: 1.7;
+    line-height: 1.75;
   }
-  h1,h2,h3,h4 {
-    font-family: var(--font-prompt, ui-sans-serif, system-ui);
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-prompt, var(--font-sarabun, ui-sans-serif));
     @apply text-slate-900 leading-tight;
   }
-  h1 { @apply font-black; }
-  h2 { @apply font-extrabold; }
-  p  { @apply leading-relaxed; }
-  a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-sm; }
+
+  h1 {
+    @apply font-black;
+  }
+
+  h2 {
+    @apply font-extrabold;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
+  a,
+  button {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-sm;
+  }
 }
 
-/* คุม container */
-.container { @apply max-w-7xl mx-auto px-4 lg:px-8; }
+/* คอนเทนเนอร์กลาง */
+.container {
+  @apply max-w-7xl mx-auto px-4 lg:px-8;
+}
 
-/* โลโก้คำว่า SoftNetwork — S ส้ม, N น้ำเงิน */
-.sn-brand { @apply font-bold tracking-wide; }
-.sn-brand .s { color:#F59E0B; }
-.sn-brand .n { color:#3B82F6; }
-.sn-brand .rest { @apply text-slate-900; }
-.on-dark .rest { @apply text-white; }
+/* โลโก้ SoftNetwork แบบ S ส้ม N น้ำเงิน */
+.sn-brand {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.sn-brand .s {
+  color: var(--sn-orange);
+}
+.sn-brand .n {
+  color: var(--sn-blue);
+}
+.sn-brand .rest {
+  color: var(--sn-dark);
+}
 
-/* เส้นใต้เวลา hover เมนูบนเดสก์ท็อป */
-.nav-underline [data-role="navlink"]{
+/* เส้นใต้เมนูบน Desktop */
+.nav-underline [data-role="navlink"] {
   position: relative;
 }
-.nav-underline [data-role="navlink"]::after{
-  content:""; position:absolute; left:0; bottom:-6px; height:2px; width:0;
-  background:#F59E0B; transition:width .25s ease;
+.nav-underline [data-role="navlink"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 2px;
+  width: 0;
+  background: var(--sn-orange);
+  transition: width 0.25s ease;
 }
-.nav-underline [data-role="navlink"]:hover::after{
-  width:100%;
+.nav-underline [data-role="navlink"]:hover::after {
+  width: 100%;
 }
 
-/* พื้นหลัง section แบบ gradient */
-.section-gradient-blue { background: linear-gradient(145deg, #E0F2FE, #DBEAFE); }
-.section-gradient-orange{ background: linear-gradient(145deg, #FFF7ED, #FFFBEB); }
-.section-solid-blue    { background:#3B82F6; color:#fff; }
-.section-solid-blue h2,.section-solid-blue p{ color:#fff; }
+/* พื้นหลัง Section แบบต่าง ๆ */
+.section-gradient-blue {
+  background: linear-gradient(145deg, #E0F2FE, #DBEAFE);
+}
+.section-gradient-orange {
+  background: linear-gradient(145deg, #FFF7ED, #FFFBEB);
+}
+.section-solid-blue {
+  background: #3B82F6;
+  color: #ffffff;
+}
+.section-solid-blue h2,
+.section-solid-blue p {
+  color: #ffffff;
+}
 
-/* การ์ดหลัก */
-.card-base{
+/* การ์ดพื้นฐาน */
+.card-base {
   @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
-  transition: transform .25s ease, box-shadow .25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.card-base:hover{ transform: translateY(-4px); box-shadow:0 12px 28px rgba(16,24,40,.12); }
+.card-base:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(16, 24, 40, 0.12);
+}
 
-/* กล่องเบลอแบบ glass */
+/* กล่องแบบ glass สำหรับแผนที่ */
 .glass-panel {
   @apply rounded-3xl border border-white/60 bg-white/40 backdrop-blur-md shadow-lg;
+}
+
+/* หัวข้อแต่ละ Section */
+.section-title {
+  font-family: var(--font-prompt, var(--font-sarabun, ui-sans-serif));
+  font-size: clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem);
+  letter-spacing: 0.02em;
+}
+
+/* ตัวหนังสือย่อย */
+.subtext {
+  @apply text-slate-600;
 }

@@ -1,23 +1,51 @@
 import "./globals.css";
 import { Sarabun, Prompt } from "next/font/google";
-import Navbar from "./components/Navbar";
 
 const sarabun = Sarabun({
   subsets: ["latin", "thai"],
-  weight: ["400","500","600","700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
   variable: "--font-sarabun",
 });
+
 const prompt = Prompt({
-  subsets: ["latin","thai"],
-  weight: ["500","600","700","800"],
+  subsets: ["latin", "thai"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
   variable: "--font-prompt",
 });
 
 export const metadata = {
-  title: "SoftNetwork - Software Studio",
-  description: "We build software for your business.",
+  // ใช้กับ Open Graph ให้ลิงก์รูปถูกโดเมน และให้ Next.js เลิกเตือน
+  metadataBase: new URL("https://softnetwork-web.vercel.app"),
+  title: {
+    default: "SoftNetwork",
+    template: "%s | SoftNetwork",
+  },
+  description:
+    "We build software that moves your business forward. SoftNetwork is a software studio specializing in enterprise systems for hire purchase, lending, and accounting.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+  },
+  openGraph: {
+    title: "SoftNetwork | Software Studio for Modern Business",
+    description:
+      "SoftNetwork ออกแบบและพัฒนาระบบงานสำหรับองค์กรด้านสินเชื่อ เช่าซื้อ และบัญชี เพื่อเพิ่มประสิทธิภาพและความคล่องตัวให้ธุรกิจของคุณ",
+    type: "website",
+    locale: "th_TH",
+    siteName: "SoftNetwork",
+    images: [
+      {
+        url: "/images/About/front.webp",
+        width: 1200,
+        height: 630,
+        alt: "SoftNetwork Software Studio for Modern Business",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -27,12 +55,10 @@ export default function RootLayout({ children }) {
         className={[
           sarabun.variable,
           prompt.variable,
-          sarabun.className,
-          "bg-white text-slate-900 antialiased selection:bg-amber-100 selection:text-slate-900"
+          "bg-white text-slate-900 antialiased selection:bg-amber-100 selection:text-slate-900",
         ].join(" ")}
       >
-        <Navbar />
-        <div className="pt-24 md:pt-28">{children}</div>
+        {children}
       </body>
     </html>
   );

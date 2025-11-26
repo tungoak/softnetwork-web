@@ -30,9 +30,13 @@ export default function Navbar() {
         <span>Email: sn-info@softnetwork.co.th</span>
       </div>
 
-      <nav className="container flex items-center justify-between py-3">
+      <nav
+        className="container flex items-center justify-between py-3"
+        aria-label="Primary navigation"
+      >
         {/* brand */}
         <button
+          type="button"
           onClick={() => go("home")}
           className="flex items-center gap-3 group"
         >
@@ -57,6 +61,7 @@ export default function Navbar() {
           {links.map((l) => (
             <li key={l.id}>
               <button
+                type="button"
                 data-role="navlink"
                 onClick={() => go(l.id)}
                 className="text-slate-600 hover:text-amber-600 transition-colors"
@@ -70,14 +75,19 @@ export default function Navbar() {
         {/* CTA + mobile toggle */}
         <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={() => go("contact")}
             className="hidden md:inline-flex items-center rounded-full bg-[#3B82F6] px-4 py-2 text-xs font-semibold text-white shadow-md shadow-blue-500/30 hover:bg-blue-600 transition"
           >
             ติดต่อเรา
           </button>
           <button
+            type="button"
             onClick={() => setOpen((o) => !o)}
             className="md:hidden inline-flex items-center justify-center rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white/80"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            aria-label={open ? "Close navigation menu" : "Open navigation menu"}
           >
             {open ? "Close" : "Menu"}
           </button>
@@ -86,11 +96,15 @@ export default function Navbar() {
 
       {/* mobile panel */}
       {open && (
-        <div className="md:hidden border-t border-slate-200 bg-white/95 backdrop-blur">
+        <div
+          id="mobile-nav"
+          className="md:hidden border-t border-slate-200 bg-white/95 backdrop-blur"
+        >
           <ul className="flex flex-col container py-2">
             {links.map((l) => (
               <li key={l.id}>
                 <button
+                  type="button"
                   onClick={() => go(l.id)}
                   className="block w-full text-left py-2 text-sm text-slate-700 hover:text-amber-600"
                 >

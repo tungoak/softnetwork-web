@@ -52,13 +52,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="th" className="scroll-smooth">
       <body
-        className={[
-          sarabun.variable,
-          prompt.variable,
-          "bg-white text-slate-900 antialiased selection:bg-amber-100 selection:text-slate-900",
-        ].join(" ")}
+        className={`${sarabun.variable} ${prompt.variable} bg-white text-slate-900 antialiased selection:bg-amber-100 selection:text-slate-900`}
       >
-        {children}
+        <div className="min-h-screen flex flex-col">{children}</div>
       </body>
     </html>
   );

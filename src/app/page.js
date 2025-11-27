@@ -3,7 +3,6 @@
 import {
   Phone,
   Mail,
-  ArrowRight,
   ChevronDown,
   Sparkles,
   Shield,
@@ -19,18 +18,38 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Navbar from "./components/Navbar";
 
+// Motion variants
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  visible: { opacity: 1, y: 0 },
+};
 
+const fadeLeft = {
+  hidden: { opacity: 0, x: -40 },
+  visible: { opacity: 1, x: 0 },
+};
 
-// --------------------------------------------------
-// หน้า Home หลัก
-// --------------------------------------------------
+const fadeRight = {
+  hidden: { opacity: 0, x: 40 },
+  visible: { opacity: 1, x: 0 },
+};
+
+const stagger = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
 export default function Home() {
   const solutionsData = [
     {
       title: "Hire Purchase System",
       name: "ระบบบริหารจัดการสินเชื่อเช่าซื้อ",
       icon: (
-        <Car className="w-16 h-16 text-orange-500 group-hover:text-orange-600 transition-colors" />
+        <Car className="w-16 h-16 text-orange-400 group-hover:text-orange-300 transition-colors" />
       ),
       desc: "ระบบบริหารจัดการสินเชื่อเช่าซื้อแบบครบวงจร รองรับตั้งแต่การตรวจสอบข้อมูลลูกค้า การทำสัญญา การติดตามสถานะ ไปจนถึงการออกเอกสารและรายงานต่าง ๆ พร้อมรองรับมาตรฐานด้านบัญชีและข้อกำหนดทางกฎหมายที่เกี่ยวข้องอย่างครบถ้วน",
     },
@@ -38,7 +57,7 @@ export default function Home() {
       title: "Lending Management System",
       name: "ระบบบริหารจัดการสินเชื่อเงินกู้",
       icon: (
-        <Banknote className="w-16 h-16 text-blue-500 group-hover:text-blue-600 transition-colors" />
+        <Banknote className="w-16 h-16 text-blue-500 group-hover:text-blue-400 transition-colors" />
       ),
       desc: "ระบบบริหารจัดการสินเชื่อเงินกู้ที่ยืดหยุ่นและแม่นยำ รองรับทั้งสินเชื่อแบบมีและไม่มีหลักประกัน สามารถกำหนดรูปแบบดอกเบี้ยได้หลากหลาย พร้อมระบบตัดชำระที่ถูกต้องตามข้อกำหนดของธนาคารแห่งประเทศไทย เหมาะสำหรับธุรกิจสินเชื่อที่ต้องการความเสถียรและปลอดภัยสูง",
     },
@@ -46,7 +65,7 @@ export default function Home() {
       title: "Accounting System",
       name: "ระบบบัญชีสำหรับองค์กร",
       icon: (
-        <PieChart className="w-16 h-16 text-purple-500 group-hover:text-purple-600 transition-colors" />
+        <PieChart className="w-16 h-16 text-purple-500 group-hover:text-purple-400 transition-colors" />
       ),
       desc: "ระบบบัญชีสำหรับองค์กรที่ต้องการความถูกต้อง รวดเร็ว และเชื่อมโยงข้อมูลได้จริง รองรับการบันทึกบัญชีและจัดทำงบการเงินโดยอัตโนมัติ ลดความซ้ำซ้อนของงานบัญชีด้วยการเชื่อมโยงข้อมูลจากระบบอื่นอย่างแม่นยำและสอดคล้องกัน",
     },
@@ -72,197 +91,232 @@ export default function Home() {
 
   return (
     <>
-      {/* พื้นหลัง dynamic */}
-      <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-orange-50" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-400/20 rounded-full blur-3xl animate-pulse" />
-      </div>
-
-      {/* Navbar หลัก */}
       <Navbar />
 
-      <main>
-        {/* ========== HOME / HERO (เต็มหน้าจอ) ========== */}
+      <main className="bg-slate-50">
+        {/* ========== HOME / HERO ========== */}
         <section
           id="home"
-          className="min-h-screen scroll-mt-24 flex items-center justify-center relative px-6 pt-32 pb-20"
+          className="relative min-h-screen scroll-mt-40 flex items-center justify-center px-4 sm:px-6 lg:px-10 pt-40 lg:pt-44 pb-24 overflow-hidden"
+          style={{
+            backgroundImage: "url('/images/home-hero.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
         >
-          <div className="max-w-7xl mx-auto text-center lg:text-left grid lg:grid-cols-2 gap-10 items-center">
-            {/* ข้อความหลัก */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+          {/* overlay ปรับใหม่: ทำให้พื้นหลังไม่มืดเกิน แต่ช่วยดันตัวหนังสือให้เด่น */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/30 via-slate-900/55 to-slate-950/80" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(15,23,42,0.8),_transparent_58%)]" />
+
+          {/* เนื้อหากลางจอ (ไม่มี card แล้ว) */}
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            className="relative z-10 w-full max-w-4xl mx-auto text-center"
+            style={{
+              textShadow: "0 14px 40px rgba(0,0,0,0.9)", // ช่วยให้ตัวอักษรลอยจากพื้นหลัง
+            }}
+          >
+            <motion.p
+              variants={fadeUp}
+              className="text-[11px] sm:text-xs md:text-sm lg:text-sm uppercase tracking-[0.32em] text-amber-200/90 mb-5"
             >
-              <p className="text-xs md:text-sm uppercase tracking-[0.3em] text-[#F59E0B]">
-                Software Studio for Modern Business
-              </p>
+              Software Studio for Modern Business
+            </motion.p>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 leading-tight mb-6">
-                We Are{" "}
-                <span className="bg-gradient-to-r from-[#F59E0B] via-[#F59E0B] to-[#3B82F6] bg-clip-text text-transparent">
-                  SoftNetwork
-                </span>
-              </h1>
-
-              <p className="text-lg md:text-2xl text-slate-600 max-w-xl lg:max-w-2xl leading-relaxed mb-6">
-                เราคือทีมผู้พัฒนาซอฟต์แวร์ที่เชี่ยวชาญด้านระบบงานสำหรับองค์กร
-                มุ่งเน้นการสร้างโซลูชันที่ช่วยเพิ่มประสิทธิภาพ ความถูกต้อง
-                และความคล่องตัวให้กับธุรกิจของคุณ ด้วยเทคโนโลยีที่ทันสมัยและมาตรฐานระดับสากล
-              </p>
-
-              <p className="text-slate-700 text-sm md:text-base font-medium mb-8">
-                We build software that moves your business forward.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
-                <a
-                  href="#solutions"
-                  className="w-full sm:w-auto group bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-sm md:text-base font-bold shadow-xl shadow-blue-500/30 flex items-center justify-center gap-2 transition-all hover:-translate-y-1"
-                >
-                  Explore Solutions
-                  <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                </a>
-                <a
-                  href="#contact"
-                  className="w-full sm:w-auto px-8 py-3 rounded-full text-sm md:text-base font-bold border-2 border-slate-800 text-slate-800 hover:bg-slate-800 hover:text-white transition-colors"
-                >
-                  Contact Us
-                </a>
-              </div>
-            </motion.div>
-
-            {/* กล่องภาพ Banner ด้านขวา */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="relative"
+            <motion.h1
+              variants={fadeUp}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[3.6rem] font-black leading-tight md:leading-[1.1] text-white mb-5"
             >
-              <div className="relative rounded-3xl bg-white/80 shadow-2xl border border-slate-100 overflow-hidden max-w-md mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#3B82F6]/10 via-transparent to-[#F59E0B]/15" />
-                <div className="relative p-5 flex flex-col gap-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-[0.2em]">
-                        Enterprise Solutions
-                      </p>
-                      <p className="text-sm font-semibold text-slate-900 mt-1">
-                        Hire Purchase • Lending • Accounting
-                      </p>
-                    </div>
-                    <div className="flex -space-x-2">
-                      <span className="w-8 h-8 rounded-full border-2 border-white bg-[#3B82F6]/90" />
-                      <span className="w-8 h-8 rounded-full border-2 border-white bg-[#F59E0B]/90" />
-                    </div>
-                  </div>
+              <span className="mr-1">We Are</span>
+              <span className="bg-gradient-to-r from-[#F59E0B] via-[#F97316] to-[#2563EB] bg-clip-text text-transparent">
+                SoftNetwork
+              </span>
+            </motion.h1>
 
-                  <div className="relative rounded-2xl overflow-hidden border border-slate-200/70 bg-slate-50 h-48">
-                    <Image
-                      src="/images/About/front.webp"
-                      alt="SoftNetwork office"
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 1024px) 24rem, 100vw"
-                      priority
-                    />
-                  </div>
+            <motion.p
+              variants={fadeUp}
+              className="text-sm sm:text-base lg:text-lg text-slate-50/95 leading-relaxed md:leading-relaxed max-w-3xl mx-auto mb-3"
+            >
+              เราคือทีมผู้พัฒนาซอฟต์แวร์ที่เชี่ยวชาญด้านระบบงานสำหรับองค์กร
+              มุ่งเน้นการสร้างโซลูชันที่ช่วยเพิ่มประสิทธิภาพ ความถูกต้อง
+              และความคล่องตัวให้กับธุรกิจของคุณ ด้วยเทคโนโลยีที่ทันสมัยและมาตรฐานระดับสากล
+            </motion.p>
 
-                  <div className="grid grid-cols-3 gap-3 text-xs">
-                    <div className="rounded-xl bg-blue-50 text-blue-700 p-3">
-                      <p className="font-semibold">องค์กร</p>
-                      <p className="mt-1">Enterprise-ready</p>
-                    </div>
-                    <div className="rounded-xl bg-amber-50 text-amber-700 p-3">
-                      <p className="font-semibold">แม่นยำ</p>
-                      <p className="mt-1">Accounting-grade</p>
-                    </div>
-                    <div className="rounded-xl bg-slate-900 text-slate-50 p-3">
-                      <p className="font-semibold">ปลอดภัย</p>
-                      <p className="mt-1">Secure by design</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+            <motion.p
+              variants={fadeUp}
+              className="text-xs sm:text-sm font-medium text-slate-200/95"
+            >
+              We build software that moves your business forward.
+            </motion.p>
+          </motion.div>
 
+                              {/* ลูกศรเลื่อนลง */}
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ repeat: Infinity, duration: 2 }}
-            className="absolute bottom-6 left-1/2 -translate-x-1/2"
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
           >
-            <ChevronDown size={32} className="mx-auto text-slate-400 opacity-70" />
+            <div
+              className="flex flex-col items-center -space-y-2"
+              style={{
+                color: "#F59E0B", // สีส้มหลักของแบรนด์
+                textShadow: "0 0 14px rgba(0,0,0,0.8)", // ช่วยให้เห็นชัดบนพื้นหลังมืด
+              }}
+            >
+              <ChevronDown size={42} />
+              <ChevronDown size={36} />
+              <ChevronDown size={30} />
+            </div>
           </motion.div>
-        </section>
+        </section>  
 
-        {/* ========== ABOUT (เต็มหน้าจอ) ========== */}
+                        {/* ========== ABOUT ========== */}
         <section
           id="about"
-          className="min-h-screen scroll-mt-24 flex items-center section-gradient-orange py-20"
+          className="relative min-h-screen scroll-mt-40 flex items-center section-gradient-orange py-24 lg:py-28 overflow-hidden"
         >
-          <div className="container grid md:grid-cols-2 gap-10 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -24 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <p className="text-xs md:text-sm uppercase tracking-[0.25em] text-[#F59E0B] mb-2">
-                About Us
-              </p>
-              <h2 className="section-title">We Are SoftNetwork</h2>
-              <p className="subtext mt-4">
-                SoftNetwork คือบริษัทผู้เชี่ยวชาญด้านการออกแบบและพัฒนาระบบคอมพิวเตอร์สำหรับองค์กร
-                เรานำเสนอโซลูชันที่ช่วยให้ทุกภาคส่วนของธุรกิจสามารถทำงานได้อย่างมีประสิทธิภาพ
-                ลดความซ้ำซ้อน และเพิ่มความแม่นยำในการจัดการข้อมูล ตั้งแต่ระดับปฏิบัติการไปจนถึงระดับบริหารจัดการ
-              </p>
-              <p className="subtext mt-4">
-                เราดำเนินงานด้วยแนวคิด “Service Marketing”
-                เพื่อยืนยันถึงการให้บริการที่ใส่ใจ โปร่งใส และตอบโจทย์ความต้องการของลูกค้าอย่างแท้จริง
-                ทั้งในด้านคุณภาพของซอฟต์แวร์และคุณภาพการให้บริการ
-              </p>
-            </motion.div>
+          {/* แสงพื้นหลังให้ mood ใกล้กับ Hero (น้ำเงิน/ส้ม) */}
+          <div className="pointer-events-none absolute -left-40 -top-40 w-80 h-80 rounded-full bg-[#3B82F6]/16 blur-3xl" />
+          <div className="pointer-events-none absolute right-[-80px] bottom-[-80px] w-[26rem] h-[26rem] rounded-full bg-[#F59E0B]/18 blur-3xl" />
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 h-40 bg-gradient-to-r from-white/40 via-transparent to-white/40" />
 
+          <div className="container relative z-10">
             <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="grid grid-cols-2 gap-4"
+              variants={stagger}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              className="grid lg:grid-cols-[1.1fr_minmax(0,1fr)] gap-10 lg:gap-16 items-center"
             >
-              <div className="relative h-40 md:h-56 lg:h-64 rounded-2xl overflow-hidden shadow-md">
-                <Image
-                  src="/images/About/meeting.jpg"
-                  alt="SoftNetwork meeting"
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 1024px) 22rem, 50vw"
-                />
-              </div>
-              <div className="relative h-40 md:h-56 lg:h-64 rounded-2xl overflow-hidden shadow-md mt-6">
-                <Image
-                  src="/images/About/office.jpg"
-                  alt="SoftNetwork office"
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 1024px) 22rem, 50vw"
-                />
-              </div>
+              {/* ฝั่งข้อความ */}
+              <motion.div
+                variants={fadeLeft}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+              >
+                {/* Badge ด้านบน */}
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 shadow-sm mb-3">
+                  <span className="h-2 w-2 rounded-full bg-[#F59E0B]" />
+                  <span className="text-[11px] md:text-xs font-semibold tracking-[0.18em] uppercase text-slate-700">
+                    About Us
+                  </span>
+                </div>
+
+                <h2 className="section-title mb-4">
+                  We Are <span className="text-[#F59E0B]">SoftNetwork</span>
+                </h2>
+
+                <p className="subtext text-sm md:text-base leading-relaxed">
+                  SoftNetwork คือบริษัทผู้เชี่ยวชาญด้านการออกแบบและพัฒนาระบบคอมพิวเตอร์สำหรับองค์กร
+                  เรานำเสนอโซลูชันที่ช่วยให้ทุกภาคส่วนของธุรกิจสามารถทำงานได้อย่างมีประสิทธิภาพ
+                  ลดความซ้ำซ้อน และเพิ่มความแม่นยำในการจัดการข้อมูล
+                  ตั้งแต่ระดับปฏิบัติการไปจนถึงระดับบริหารจัดการ
+                </p>
+
+                <p className="subtext text-sm md:text-base leading-relaxed mt-4">
+                  เราดำเนินงานด้วยแนวคิด{" "}
+                  <span className="font-semibold">“Service Marketing”</span>
+                  เพื่อยืนยันถึงการให้บริการที่ใส่ใจ โปร่งใส
+                  และตอบโจทย์ความต้องการของลูกค้าอย่างแท้จริง
+                  ทั้งในด้านคุณภาพของซอฟต์แวร์และคุณภาพการให้บริการ
+                </p>
+
+                {/* bullet เน้น key value แบบอ่านง่าย */}
+                <ul className="mt-6 space-y-3 text-sm md:text-base text-slate-700">
+                  <li className="flex items-start gap-2">
+                    <Sparkles className="w-4 h-4 mt-[3px] text-[#F59E0B]" />
+                    <span>ออกแบบโซลูชันให้สอดคล้องกับกระบวนการทำงานจริงขององค์กรคุณ</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Sparkles className="w-4 h-4 mt-[3px] text-[#3B82F6]" />
+                    <span>รองรับการขยายตัวของธุรกิจในระยะยาว ทั้งด้านเทคนิคและการใช้งาน</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Sparkles className="w-4 h-4 mt-[3px] text-[#22C55E]" />
+                    <span>ทีมงานพร้อมช่วยเหลือ ตั้งแต่เริ่มต้นจนถึงหลังการติดตั้งระบบ</span>
+                  </li>
+                </ul>
+              </motion.div>
+
+              {/* ฝั่งรูป 3 รูป + animation */}
+              <motion.div
+                variants={fadeRight}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+                className="relative grid grid-cols-2 gap-4 lg:gap-5"
+              >
+                {/* glow ด้านหลังให้ดูล้ำยุค */}
+                <div className="pointer-events-none absolute -right-8 -bottom-10 w-40 h-40 bg-[#F59E0B]/35 rounded-full blur-3xl" />
+                <div className="pointer-events-none absolute -left-10 -top-10 w-40 h-40 bg-[#3B82F6]/25 rounded-full blur-3xl" />
+
+                {/* รูปหลัก (ด้านบน กิน 2 คอลัมน์) */}
+                <motion.div
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                  className="relative col-span-2 h-52 sm:h-64 lg:h-72 rounded-3xl overflow-hidden shadow-xl"
+                >
+                  <Image
+                    src="/images/About/front.webp"
+                    alt="SoftNetwork office front"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 30rem, 80vw"
+                    loading="eager"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/35 via-transparent to-transparent" />
+                </motion.div>
+
+                {/* รูปที่ 2 */}
+                <motion.div
+                  whileHover={{ y: -6, scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                  className="relative h-32 sm:h-40 lg:h-44 rounded-2xl overflow-hidden shadow-md"
+                >
+                  <Image
+                    src="/images/About/office.jpg"
+                    alt="SoftNetwork office environment"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 14rem, 40vw"
+                  />
+                </motion.div>
+
+                {/* รูปที่ 3 */}
+                <motion.div
+                  whileHover={{ y: -6, scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                  className="relative h-32 sm:h-40 lg:h-44 rounded-2xl overflow-hidden shadow-md"
+                >
+                  <Image
+                    src="/images/About/meeting.jpg"
+                    alt="SoftNetwork meeting"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 14rem, 40vw"
+                  />
+                </motion.div>
+              </motion.div>
             </motion.div>
           </div>
         </section>
 
-        {/* ========== SOLUTIONS (เต็มหน้าจอ) ========== */}
+
+        {/* ========== SOLUTIONS ========== */}
         <section
           id="solutions"
-          className="min-h-screen scroll-mt-24 flex items-center py-20 bg-white"
+          className="min-h-screen scroll-mt-40 flex items-center py-24 lg:py-28 bg-white"
         >
           <div className="container">
-            <div className="text-center max-w-2xl mx-auto">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}
+              className="text-center max-w-2xl mx-auto"
+            >
               <p className="text-xs md:text-sm uppercase tracking-[0.25em] text-[#3B82F6] mb-2">
                 Solutions
               </p>
@@ -272,17 +326,21 @@ export default function Home() {
                 เพื่อช่วยให้การจัดการข้อมูลและกระบวนการทำงานในองค์กรของคุณเป็นไปอย่างมีประสิทธิภาพ
                 ตรวจสอบได้ และขยายต่อได้ในอนาคต
               </p>
-            </div>
+            </motion.div>
 
-            <div className="mt-10 grid md:grid-cols-3 gap-6">
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.25 }}
+              className="mt-12 grid md:grid-cols-3 gap-6"
+            >
               {solutionsData.map((sol) => (
                 <motion.article
                   key={sol.title}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  viewport={{ once: true }}
-                  className="card-base p-6 flex flex-col h-full group"
+                  variants={fadeUp}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  className="card-base p-6 flex flex-col h-full group hover:-translate-y-1 hover:shadow-xl transition-transform duration-300"
                 >
                   <div className="mb-4 flex justify-center md:justify-start">
                     {sol.icon}
@@ -290,7 +348,9 @@ export default function Home() {
                   <h3 className="font-semibold text-lg text-slate-900">
                     {sol.title}
                   </h3>
-                  <p className="text-sm text-slate-700 mt-1 mb-2">{sol.name}</p>
+                  <p className="text-sm text-slate-700 mt-1 mb-2">
+                    {sol.name}
+                  </p>
                   <p className="subtext text-sm mb-4">{sol.desc}</p>
                   <div className="mt-auto flex justify-center md:justify-start">
                     <a
@@ -303,17 +363,24 @@ export default function Home() {
                   </div>
                 </motion.article>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* ========== SERVICES (เต็มหน้าจอ) ========== */}
+        {/* ========== SERVICES ========== */}
         <section
           id="services"
-          className="min-h-screen scroll-mt-24 flex items-center section-gradient-blue py-24"
+          className="min-h-screen scroll-mt-40 flex items-center section-gradient-blue py-24 lg:py-28"
         >
           <div className="container">
-            <div className="text-center max-w-2xl mx-auto">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}
+              className="text-center max-w-2xl mx-auto"
+            >
               <p className="text-xs md:text-sm uppercase tracking-[0.25em] text-[#1D4ED8] mb-2">
                 Services
               </p>
@@ -323,19 +390,23 @@ export default function Home() {
                 ไปจนถึงการติดตั้งและดูแลระบบ เพื่อให้ซอฟต์แวร์ที่คุณเลือก
                 สามารถนำไปใช้งานได้จริงและสร้างมูลค่าให้กับธุรกิจอย่างต่อเนื่อง
               </p>
-            </div>
+            </motion.div>
 
-            <div className="mt-10 grid md:grid-cols-3 gap-6">
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.25 }}
+              className="mt-12 grid md:grid-cols-3 gap-6"
+            >
               {servicesData.map((service) => {
                 const Icon = service.icon;
                 return (
                   <motion.article
                     key={service.title}
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    viewport={{ once: true }}
-                    className="card-base p-6 h-full flex flex-col"
+                    variants={fadeUp}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className="card-base p-6 h-full flex flex-col hover:-translate-y-1 hover:shadow-xl transition-transform duration-300"
                   >
                     <div className="mb-4 inline-flex items-center justify-center rounded-xl bg-blue-50 p-3 text-[#3B82F6]">
                       <Icon className="w-5 h-5" />
@@ -347,29 +418,42 @@ export default function Home() {
                   </motion.article>
                 );
               })}
-            </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* ========== CUSTOMERS (เต็มหน้าจอ / ไม่มี grayscale animation) ========== */}
+        {/* ========== CUSTOMERS ========== */}
         <section
           id="customers"
-          className="min-h-screen scroll-mt-24 flex items-center py-24 bg-white"
+          className="min-h-screen scroll-mt-40 flex items-center py-24 lg:py-28 bg-white"
         >
           <div className="max-w-7xl mx-auto px-6 text-center">
-            <p className="text-xs md:text-sm uppercase tracking-[0.25em] text-[#F59E0B] mb-2">
-              Our Customers
-            </p>
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4">
-              ความไว้วางใจจากลูกค้าธุรกิจหลากหลายกลุ่ม
-            </h2>
-            <p className="text-slate-500 mb-12 text-sm md:text-base max-w-2xl mx-auto">
-              เรามีโอกาสให้บริการลูกค้าในหลายประเภทธุรกิจ ทั้งองค์กรขนาดเล็ก กลาง และขนาดใหญ่
-              ซึ่งสะท้อนถึงความเชื่อมั่นในคุณภาพของโซลูชัน และประสบการณ์ด้านระบบงานองค์กรของเรา
-            </p>
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <p className="text-xs md:text-sm uppercase tracking-[0.25em] text-[#F59E0B] mb-2">
+                Our Customers
+              </p>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4">
+                ความไว้วางใจจากลูกค้าธุรกิจหลากหลายกลุ่ม
+              </h2>
+              <p className="text-slate-500 mb-12 text-sm md:text-base max-w-2xl mx-auto">
+                เรามีโอกาสให้บริการลูกค้าในหลายประเภทธุรกิจ ทั้งองค์กรขนาดเล็ก กลาง และขนาดใหญ่
+                ซึ่งสะท้อนถึงความเชื่อมั่นในคุณภาพของโซลูชัน และประสบการณ์ด้านระบบงานองค์กรของเรา
+              </p>
+            </motion.div>
 
-            {/* ลบ grayscale / hover ขาวดำ ออกแล้ว และใช้ next/image */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center">
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center"
+            >
               {[
                 { file: "gw.png", alt: "Green Wing เงินด่วน" },
                 { file: "advance-fin.png", alt: "Advance Finance" },
@@ -379,31 +463,39 @@ export default function Home() {
                 { file: "mittae-esan.jpg", alt: "Mittae Esan Co., Ltd." },
                 { file: "nakhonluang-capital.webp", alt: "Nakhonluang Capital" },
               ].map((logo) => (
-                <div
+                <motion.div
                   key={logo.file}
-                  className="flex justify-center p-4 hover:scale-110 transition-transform duration-300"
+                  variants={fadeUp}
+                  className="flex justify-center p-4"
                 >
                   <Image
                     src={`/images/customers/${logo.file}`}
                     alt={logo.alt}
                     width={160}
                     height={64}
-                    className="h-16 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
+                    className="h-16 w-auto object-contain opacity-80 hover:opacity-100 hover:scale-110 transition-transform duration-300"
                     loading="lazy"
                   />
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* ========== CONTACT (เต็มหน้าจอ, ไม่มี LINE, ไม่มี grayscale animation) ========== */}
+        {/* ========== CONTACT ========== */}
         <section
           id="contact"
-          className="min-h-screen scroll-mt-24 flex items-center py-24 bg-gradient-to-b from-slate-50 to-slate-100"
+          className="min-h-screen scroll-mt-40 flex items-center py-24 lg:py-28 bg-gradient-to-b from-slate-50 to-slate-100"
         >
           <div className="max-w-7xl mx-auto px-6 w-full">
-            <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}
+              className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100"
+            >
               <div className="grid lg:grid-cols-2">
                 {/* ข้อมูลติดต่อ */}
                 <div className="p-10 lg:p-16 bg-slate-900 text-white relative overflow-hidden">
@@ -462,7 +554,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* แผนที่ – ใช้ลิงก์ Google Maps ที่ให้มา */}
+                {/* แผนที่ Google Maps */}
                 <div className="h-[400px] lg:h-auto bg-slate-200 relative">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1937.6038478300402!2d100.61936100000001!3d13.766345!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d6206d6d57fd7%3A0xf673ab955d9d6639!2z4Lia4Lij4Li04Lip4Lix4LiXIOC4i-C4reC4n-C4l-C5jOC5gOC4meC5h-C4leC5gOC4p-C4tOC4o-C5jOC4hCDguIjguLPguIHguLHguJQ!5e0!3m2!1sth!2sth!4v1764059119103!5m2!1sth!2sth"
@@ -477,12 +569,12 @@ export default function Home() {
                   />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
+      {/* ========== FOOTER ========== */}
       <footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <a
@@ -495,7 +587,8 @@ export default function Home() {
             เรามุ่งมั่นพัฒนาซอฟต์แวร์เพื่อขับเคลื่อนธุรกิจการเงินไทยสู่ยุคดิจิทัล
           </p>
           <p className="text-xs text-slate-600">
-            © {new Date().getFullYear()} SoftNetwork Co., Ltd. All Rights Reserved.
+            © {new Date().getFullYear()} SoftNetwork Co., Ltd. All Rights
+            Reserved.
           </p>
         </div>
       </footer>

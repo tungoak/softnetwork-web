@@ -7,51 +7,87 @@ html {
 
 /* สีหลักของแบรนด์ */
 :root {
-  --sn-blue: #3B82F6;   /* 3B82F6 */
-  --sn-orange: #F59E0B; /* F59E0B */
-  --sn-dark: #0F172A;
+  --sn-blue: #2563eb;   /* เทียบ tailwind blue-600 */
+  --sn-orange: #f59e0b; /* เทียบ amber-500 */
+  --sn-dark: #1f2a4d;
 }
 
 /* ---------- Base Typography ---------- */
 @layer base {
   body {
-    font-family: "TH Sarabun New", "TH Sarabun PSK", "TH Sarabun IT๙",
-      var(--font-sarabun), ui-sans-serif, system-ui, -apple-system,
-      "Segoe UI", sans-serif;
-    @apply bg-white text-slate-800 antialiased;
+    /* ใช้ Prompt เป็นฟอนต์หลักทั้งเว็บ */
+    font-family: var(--font-prompt), system-ui, -apple-system, "Segoe UI",
+      sans-serif;
+    background-color: #ffffff; /* เดิมคือ bg-white */
+    color: #0f172a;            /* เดิมคือ text-slate-900 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
-    line-height: 1.75;
+    line-height: 1.75; /* ฟีลใกล้กับ leading-relaxed */
   }
 
   h1,
   h2,
   h3,
   h4 {
+    /* heading ใช้ Prompt เช่นกัน ให้โทนเดียวกับแบรนด์ */
     font-family: var(--font-prompt, var(--font-sarabun, ui-sans-serif));
-    @apply text-slate-900 leading-tight;
+    color: #0f172a;      /* เทียบ text-slate-900 */
+    line-height: 1.2;    /* ฟีลใกล้กับ leading-tight */
   }
 
   h1 {
-    @apply font-black;
+    font-weight: 900;    /* font-black */
   }
 
   h2 {
-    @apply font-extrabold;
+    font-weight: 800;    /* font-extrabold */
   }
 
   p {
-    @apply leading-relaxed;
+    line-height: 1.7;    /* ฟีลใกล้กับ leading-relaxed */
   }
 
   a,
   button {
-    @apply outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-sm;
+    outline: none;
   }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    /* เทียบ ring-2 ring-blue-500/40 */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+    border-radius: 0.125rem; /* rounded-sm */
+  }
+}
+
+/* helper class: ถ้าอยากบังคับใช้ Prompt หรือ Sarabun เฉพาะจุด */
+.font-prompt {
+  font-family: var(--font-prompt), system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+}
+
+.font-sarabun {
+  font-family: "TH Sarabun New", "TH Sarabun PSK", "TH Sarabun IT๙",
+    var(--font-sarabun), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 /* คอนเทนเนอร์กลาง */
 .container {
-  @apply max-w-7xl mx-auto px-4 lg:px-8;
+  max-width: 80rem; /* เทียบ max-w-7xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;  /* px-4 */
+  padding-right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;  /* lg:px-8 */
+    padding-right: 2rem;
+  }
 }
 
 /* โลโก้ SoftNetwork แบบ S ส้ม N น้ำเงิน */
@@ -89,13 +125,13 @@ html {
 
 /* พื้นหลัง Section แบบต่าง ๆ */
 .section-gradient-blue {
-  background: linear-gradient(145deg, #E0F2FE, #DBEAFE);
+  background: linear-gradient(145deg, #e0f2fe, #dbeafe);
 }
 .section-gradient-orange {
-  background: linear-gradient(145deg, #FFF7ED, #FFFBEB);
+  background: linear-gradient(145deg, #fff7ed, #fffbeb);
 }
 .section-solid-blue {
-  background: #3B82F6;
+  background: #3b82f6;
   color: #ffffff;
 }
 .section-solid-blue h2,
@@ -105,7 +141,13 @@ html {
 
 /* การ์ดพื้นฐาน */
 .card-base {
-  @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+  border-radius: 1rem;          /* rounded-2xl */
+  border-width: 1px;
+  border-style: solid;
+  border-color: #e5e7eb;        /* slate-200 */
+  background-color: #ffffff;
+  /* shadow-sm ประมาณนี้ */
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .card-base:hover {
@@ -115,7 +157,12 @@ html {
 
 /* กล่องแบบ glass สำหรับแผนที่ */
 .glass-panel {
-  @apply rounded-3xl border border-white/60 bg-white/40 backdrop-blur-md shadow-lg;
+  border-radius: 1.5rem; /* rounded-3xl */
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
 }
 
 /* หัวข้อแต่ละ Section */
@@ -127,5 +174,5 @@ html {
 
 /* ตัวหนังสือย่อย */
 .subtext {
-  @apply text-slate-600;
+  color: #475569; /* text-slate-600 */
 }

@@ -1,11 +1,64 @@
 @import "tailwindcss";
 
-/* ให้เลื่อนแบบนุ่มนวลเวลา click anchor (#about ฯลฯ) */
+/* ---------- Global Scrollbar ไล่สี 3 สี ---------- */
+/* ใช้กับทั้งเว็บ: html/body และทุก element ที่มี scrollbar */
+
+/* เลื่อนนุ่ม */
 html {
   scroll-behavior: smooth;
 }
 
-/* สีหลักของแบรนด์ */
+/* Firefox (ยังไม่รองรับ gradient บน scrollbar) – ใช้สีใกล้เคียง */
+html,
+body {
+  scrollbar-width: thin;
+  /* thumb = ส้มเข้ม, track = ดำเข้ม */
+  scrollbar-color: #f97316 #020617;
+}
+
+/* Chrome / Edge / Safari ใช้ ::-webkit-scrollbar */
+/* จับทุกตัวที่มี scrollbar เผื่อบางทีเป็น div ยาว ๆ */
+*::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+/* พื้นหลัง track ให้มืด ตัดกับ thumb */
+*::-webkit-scrollbar-track {
+  background-color: #020617;
+}
+
+/* แท่งเลื่อน – ไล่ 3 สีของแบรนด์แนวตั้งแบบเป็น "แถบ" เห็นชัด */
+*::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(
+    180deg,
+    #f59e0b 0%,    /* แถบบน: ส้มหลัก */
+    #f59e0b 33%,
+    #f97316 33%,   /* แถบกลาง: ส้มเข้ม */
+    #f97316 66%,
+    #2563eb 66%,   /* แถบล่าง: น้ำเงินหลัก */
+    #2563eb 100%
+  );
+  border-radius: 999px;
+  border: 2px solid #020617;
+  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.1); /* ขอบบาง ๆ ให้มีมิติ */
+}
+
+/* ตอน hover – ยัง 3 แถบ แต่โทนสว่าง / ฟ้าอ่อนขึ้น */
+*::-webkit-scrollbar-thumb:hover {
+  background-image: linear-gradient(
+    180deg,
+    #fed7aa 0%,    /* แถบบน: ส้มอ่อน */
+    #fed7aa 33%,
+    #f59e0b 33%,   /* กลาง: ส้มหลัก */
+    #f59e0b 66%,
+    #60a5fa 66%,   /* ล่าง: ฟ้าอ่อน */
+    #60a5fa 100%
+  );
+  border-color: #020617;
+}
+
+/* ---------- สีหลักของแบรนด์ ---------- */
 :root {
   --sn-blue: #2563eb;   /* เทียบ tailwind blue-600 */
   --sn-orange: #f59e0b; /* เทียบ amber-500 */

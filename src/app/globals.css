@@ -1,104 +1,107 @@
 @import "tailwindcss";
 
 /* ---------- Global Scrollbar ไล่สี 3 สี ---------- */
-/* ใช้กับทั้งเว็บ: html/body และทุก element ที่มี scrollbar */
-
-/* เลื่อนนุ่ม */
 html {
   scroll-behavior: smooth;
 }
 
-/* Firefox (ยังไม่รองรับ gradient บน scrollbar) – ใช้สีใกล้เคียง */
+/* Firefox (ยังไม่รองรับ gradient บน scrollbar) */
 html,
 body {
   scrollbar-width: thin;
-  /* thumb = ส้มเข้ม, track = ดำเข้ม */
   scrollbar-color: #f97316 #020617;
 }
 
-/* Chrome / Edge / Safari ใช้ ::-webkit-scrollbar */
-/* จับทุกตัวที่มี scrollbar เผื่อบางทีเป็น div ยาว ๆ */
+/* Chrome / Edge / Safari */
 *::-webkit-scrollbar {
   width: 11px;
   height: 11px;
 }
 
-/* พื้นหลัง track ให้มืด ตัดกับ thumb */
 *::-webkit-scrollbar-track {
   background-color: #020617;
 }
 
-/* แท่งเลื่อน – ไล่ 3 สีของแบรนด์แนวตั้งแบบเป็น "แถบ" เห็นชัด */
 *::-webkit-scrollbar-thumb {
   background-image: linear-gradient(
     180deg,
-    #f59e0b 0%,    /* แถบบน: ส้มหลัก */
+    #f59e0b 0%,
     #f59e0b 33%,
-    #f97316 33%,   /* แถบกลาง: ส้มเข้ม */
+    #f97316 33%,
     #f97316 66%,
-    #2563eb 66%,   /* แถบล่าง: น้ำเงินหลัก */
-    #2563eb 100%
+    var(--sn-blue) 66%,
+    var(--sn-blue) 100%
   );
   border-radius: 999px;
   border: 2px solid #020617;
-  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.1); /* ขอบบาง ๆ ให้มีมิติ */
+  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.1);
 }
 
-/* ตอน hover – ยัง 3 แถบ แต่โทนสว่าง / ฟ้าอ่อนขึ้น */
 *::-webkit-scrollbar-thumb:hover {
   background-image: linear-gradient(
     180deg,
-    #fed7aa 0%,    /* แถบบน: ส้มอ่อน */
+    #fed7aa 0%,
     #fed7aa 33%,
-    #f59e0b 33%,   /* กลาง: ส้มหลัก */
+    #f59e0b 33%,
     #f59e0b 66%,
-    #60a5fa 66%,   /* ล่าง: ฟ้าอ่อน */
-    #60a5fa 100%
+    #2a8bea 66%,
+    #2a8bea 100%
   );
   border-color: #020617;
 }
 
 /* ---------- สีหลักของแบรนด์ ---------- */
 :root {
-  --sn-blue: #2563eb;   /* เทียบ tailwind blue-600 */
-  --sn-orange: #f59e0b; /* เทียบ amber-500 */
+  --sn-blue-light: #2a8bea;
+  --sn-blue: #1e6bb8;
+  --sn-orange: #f59e0b;
   --sn-dark: #1f2a4d;
 }
 
 /* ---------- Base Typography ---------- */
 @layer base {
   body {
-    /* ใช้ Prompt เป็นฟอนต์หลักทั้งเว็บ */
-    font-family: var(--font-prompt), system-ui, -apple-system, "Segoe UI",
+    /* ✅ ปรับให้ Kanit เป็นฟอนต์หลัก (ไทยอ่านง่าย) แล้วค่อย fallback ไป Poppins/Prompt/Sarabun */
+    font-family: var(
+        --font-kanit,
+        var(--font-poppins, var(--font-prompt, var(--font-sarabun)))
+      ),
+      system-ui,
+      -apple-system,
+      "Segoe UI",
       sans-serif;
-    background-color: #ffffff; /* เดิมคือ bg-white */
-    color: #0f172a;            /* เดิมคือ text-slate-900 */
+
+    background-color: #ffffff;
+    color: #0f172a;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
-    line-height: 1.75; /* ฟีลใกล้กับ leading-relaxed */
+    line-height: 1.75;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    /* heading ใช้ Prompt เช่นกัน ให้โทนเดียวกับแบรนด์ */
-    font-family: var(--font-prompt, var(--font-sarabun, ui-sans-serif));
-    color: #0f172a;      /* เทียบ text-slate-900 */
-    line-height: 1.2;    /* ฟีลใกล้กับ leading-tight */
+    /* Heading ใช้ Poppins เป็นหลัก (ดู modern) */
+    font-family: var(
+      --font-poppins,
+      var(--font-kanit, var(--font-prompt, var(--font-sarabun, ui-sans-serif)))
+    );
+    color: #0f172a;
+    line-height: 1.2;
   }
 
   h1 {
-    font-weight: 900;    /* font-black */
+    font-weight: 900;
   }
 
   h2 {
-    font-weight: 800;    /* font-extrabold */
+    font-weight: 800;
   }
 
   p {
-    line-height: 1.7;    /* ฟีลใกล้กับ leading-relaxed */
+    line-height: 1.7;
   }
 
   a,
@@ -110,16 +113,22 @@ body {
   button:focus-visible {
     outline: 2px solid transparent;
     outline-offset: 2px;
-    /* เทียบ ring-2 ring-blue-500/40 */
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
-    border-radius: 0.125rem; /* rounded-sm */
+    border-radius: 0.125rem;
   }
 }
 
-/* helper class: ถ้าอยากบังคับใช้ Prompt หรือ Sarabun เฉพาะจุด */
+/* helper class */
+.font-kanit {
+  font-family: var(--font-kanit), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.font-poppins {
+  font-family: var(--font-poppins), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
 .font-prompt {
-  font-family: var(--font-prompt), system-ui, -apple-system, "Segoe UI",
-    sans-serif;
+  font-family: var(--font-prompt), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 .font-sarabun {
@@ -129,16 +138,16 @@ body {
 
 /* คอนเทนเนอร์กลาง */
 .container {
-  max-width: 80rem; /* เทียบ max-w-7xl */
+  max-width: 80rem;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;  /* px-4 */
+  padding-left: 1rem;
   padding-right: 1rem;
 }
 
 @media (min-width: 1024px) {
   .container {
-    padding-left: 2rem;  /* lg:px-8 */
+    padding-left: 2rem;
     padding-right: 2rem;
   }
 }
@@ -183,8 +192,10 @@ body {
 .section-gradient-orange {
   background: linear-gradient(145deg, #fff7ed, #fffbeb);
 }
+
+/* Section พื้นหลังน้ำเงินแบบ gradient */
 .section-solid-blue {
-  background: #3b82f6;
+  background-image: linear-gradient(135deg, var(--sn-blue-light), var(--sn-blue));
   color: #ffffff;
 }
 .section-solid-blue h2,
@@ -194,12 +205,11 @@ body {
 
 /* การ์ดพื้นฐาน */
 .card-base {
-  border-radius: 1rem;          /* rounded-2xl */
+  border-radius: 1rem;
   border-width: 1px;
   border-style: solid;
-  border-color: #e5e7eb;        /* slate-200 */
+  border-color: #e5e7eb;
   background-color: #ffffff;
-  /* shadow-sm ประมาณนี้ */
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -208,9 +218,9 @@ body {
   box-shadow: 0 12px 28px rgba(16, 24, 40, 0.12);
 }
 
-/* กล่องแบบ glass สำหรับแผนที่ */
+/* กล่องแบบ glass สำหรับแผนที่ / Contact */
 .glass-panel {
-  border-radius: 1.5rem; /* rounded-3xl */
+  border-radius: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.6);
   background-color: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(12px);
@@ -220,12 +230,28 @@ body {
 
 /* หัวข้อแต่ละ Section */
 .section-title {
-  font-family: var(--font-prompt, var(--font-sarabun, ui-sans-serif));
+  font-family: var(
+    --font-poppins,
+    var(--font-kanit, var(--font-prompt, var(--font-sarabun, ui-sans-serif)))
+  );
   font-size: clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem);
   letter-spacing: 0.02em;
 }
 
 /* ตัวหนังสือย่อย */
 .subtext {
-  color: #475569; /* text-slate-600 */
+  color: #475569;
+}
+
+/* ===== Gradient Blue (#2A8BEA → #1E6BB8) ===== */
+.sn-blue-gradient {
+  background-image: linear-gradient(90deg, var(--sn-blue-light), var(--sn-blue));
+}
+
+.sn-blue-pill {
+  background-image: linear-gradient(135deg, var(--sn-blue-light), var(--sn-blue));
+}
+
+.sn-blue-text {
+  color: var(--sn-blue);
 }

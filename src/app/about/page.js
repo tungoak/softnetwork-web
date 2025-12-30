@@ -1,382 +1,424 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { Zap, Radio, Layers, ArrowRight, Flag, Building2, ShieldCheck, Award, Rocket } from "lucide-react";
 
+/* -------------------- Motion Variants -------------------- */
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 28 },
   visible: { opacity: 1, y: 0 },
 };
 
 const fadeLeft = {
-  hidden: { opacity: 0, x: -40 },
+  hidden: { opacity: 0, x: -36 },
   visible: { opacity: 1, x: 0 },
 };
 
 const fadeRight = {
-  hidden: { opacity: 0, x: 40 },
+  hidden: { opacity: 0, x: 36 },
   visible: { opacity: 1, x: 0 },
 };
 
 const stagger = {
   hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.15 },
-  },
+  visible: { transition: { staggerChildren: 0.12 } },
 };
 
-export default function AboutPage() {
+/* -------------------- Data -------------------- */
+const aboutHighlights = [
+  { color: "#2563EB", text: "ออกแบบโซลูชันให้สอดคล้องกับกระบวนการทำงานจริงขององค์กรคุณ" },
+  { color: "#F59E0B", text: "รองรับการขยายตัวของธุรกิจในระยะยาว ทั้งด้านเทคนิคและการใช้งาน" },
+  { color: "#10B981", text: "ทีมงานพร้อมช่วยเหลือ ตั้งแต่เริ่มต้นจนถึงหลังการติดตั้งระบบ" },
+];
+
+const timelineSteps = [
+  {
+    year: "2004",
+    title: "Early foundation",
+    desc: "Established in 2004 by a team of developers specializing in lending technology, SoftNetwork began with loan management and showroom software.",
+  },
+  {
+    year: "2007–2012",
+    title: "Lending focus",
+    desc: "Focused fully on lending solutions, expanding to provincial markets and showrooms, and building core contract management functions.",
+  },
+  {
+    year: "2013–2017",
+    title: "Institutional trust",
+    desc: "Earned trust from government and major financial institutions, introducing Debt Collection, Reporting, and Loan Origination aligned with BOT regulatory requirements.",
+  },
+  {
+    year: "2018–2024",
+    title: "20-year milestone",
+    desc: "Celebrated 20 years as an industry leader, delivering LMS with GL Integration and LOS, serving top-tier clients in the financial industry.",
+  },
+  {
+    year: "Next Decade",
+    title: "Fintech ecosystem",
+    desc: "Aiming to be a trusted advisor in credit data and digital lending, developing automatic lending solutions and expanding into a fintech ecosystem.",
+  },
+];
+
+/* -------------------- Helpers -------------------- */
+function Wrap({ children, className = "" }) {
+  return <div className={["mx-auto max-w-6xl px-4 sm:px-6 lg:px-10", className].join(" ")}>{children}</div>;
+}
+
+function ModernCard({ children, className = "" }) {
   return (
-    <section
-  id="about"
-  className="relative min-h-screen scroll-mt-[140px] pt-32 md:pt-36 lg:pt-40 pb-20 md:pb-24 overflow-hidden bg-slate-950"
->
+    <div
+      className={[
+        "relative rounded-3xl bg-white border border-slate-100",
+        "shadow-[0_10px_40px_rgba(2,6,23,0.08)]",
+        "hover:shadow-[0_20px_60px_rgba(2,6,23,0.14)] hover:-translate-y-1 transition-all duration-300",
+        "overflow-hidden",
+        className,
+      ].join(" ")}
+    >
+      {/* light sweep */}
+      <div className="pointer-events-none absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute -left-1/3 top-0 h-full w-1/3 rotate-12 bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+      </div>
+      {children}
+    </div>
+  );
+}
 
-      {/* พื้นหลังโทนเข้ม + ไล่สีฟ้า/ส้ม แบบ SoftNetwork */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.35),_transparent_60%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(245,158,11,0.4),_transparent_64%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 h-52 bg-[radial-gradient(circle_at_center,_rgba(15,23,42,0.9),_transparent_70%)]" />
-      <div className="pointer-events-none absolute -left-40 -top-40 w-80 h-80 rounded-full bg-[#2563EB]/25 blur-3xl" />
-      <div className="pointer-events-none absolute right-[-80px] bottom-[-80px] w-[26rem] h-[26rem] rounded-full bg-[#F59E0B]/28 blur-3xl" />
+function GradientYear({ children, from, to, className = "", opacity = 0.26 }) {
+  return (
+    <span
+      className={[
+        "block font-poppins text-7xl lg:text-8xl font-black leading-none tracking-tighter select-none",
+        className,
+      ].join(" ")}
+      style={{
+        backgroundImage: `linear-gradient(90deg, ${from}, ${to})`,
+        WebkitBackgroundClip: "text",
+        color: "transparent",
+        opacity,
+        filter: "drop-shadow(0 10px 22px rgba(2,6,23,0.12))",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
 
-      <div className="container relative z-10 space-y-16 lg:space-y-20">
-        {/* ---------- บล็อกแนะนำ SoftNetwork ---------- */}
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          className="grid lg:grid-cols-[1.1fr_minmax(0,1fr)] gap-10 lg:gap-16 items-center"
-        >
-          {/* Text */}
+function YearPill({ year, from, to }) {
+  return (
+    <span
+      className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold text-white shadow-sm"
+      style={{ backgroundImage: `linear-gradient(90deg, ${from}, ${to})` }}
+    >
+      {year}
+    </span>
+  );
+}
+
+function timelineMeta(index) {
+  const themes = [
+    { Icon: Flag, from: "#2563EB", to: "#60A5FA" },
+    { Icon: Building2, from: "#F59E0B", to: "#FB923C" },
+    { Icon: ShieldCheck, from: "#8B5CF6", to: "#D946EF" },
+    { Icon: Award, from: "#10B981", to: "#34D399" },
+    { Icon: Rocket, from: "#EC4899", to: "#F43F5E" },
+  ];
+  return themes[index % themes.length];
+}
+
+function TimelineCard({ step, meta, align = "left" }) {
+  const { Icon, from, to } = meta;
+
+  const borderClass = align === "left" ? "border-l-[6px]" : "border-r-[6px]";
+  const borderStyle = align === "left" ? { borderLeftColor: from } : { borderRightColor: from };
+
+  return (
+    <ModernCard className={["p-6 md:p-8", borderClass].join(" ")} style={borderStyle}>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 shadow-sm flex items-center justify-center">
+            <Icon size={24} style={{ color: from }} />
+          </div>
+          <div className="space-y-1">
+            <YearPill year={step.year === "Next Decade" ? "NEXT" : step.year} from={from} to={to} />
+            <div className="text-xs text-slate-500 font-poppins">SoftNetwork timeline</div>
+          </div>
+        </div>
+
+        <div className="hidden sm:block">
+          <div
+            className="h-10 w-10 rounded-2xl"
+            style={{
+              backgroundImage: `radial-gradient(circle at 30% 30%, ${to} 0%, ${from} 55%, rgba(255,255,255,0) 70%)`,
+              opacity: 0.28,
+            }}
+          />
+        </div>
+      </div>
+
+      <h4 className="mt-5 text-xl md:text-2xl font-bold text-slate-900 font-poppins">{step.title}</h4>
+      <p className="mt-3 text-base text-slate-600 leading-relaxed">{step.desc}</p>
+
+      <div className="mt-6 h-[2px] w-full rounded-full" style={{ backgroundImage: `linear-gradient(90deg, ${from}, ${to})`, opacity: 0.35 }} />
+    </ModernCard>
+  );
+}
+
+/* -------------------- Page -------------------- */
+export default function Page() {
+  return (
+    <section id="about" className="relative min-h-screen scroll-mt-[100px] bg-white overflow-hidden font-kanit text-slate-800">
+      {/* ---------------- Background (Bold Circles) ---------------- */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-white" />
+
+        {/* top-left: blue circle + ring */}
+        <div className="absolute -top-[220px] -left-[220px] h-[520px] w-[520px] rounded-full bg-[#2563EB] opacity-[0.28] md:-top-[280px] md:-left-[280px] md:h-[660px] md:w-[660px]" />
+        <div className="absolute -top-[300px] -left-[300px] h-[720px] w-[720px] rounded-full border-[54px] border-[#2563EB] opacity-[0.16] md:-top-[360px] md:-left-[360px] md:h-[860px] md:w-[860px] md:border-[62px]" />
+
+        {/* bottom-right: amber circle + amber ring + blue ring */}
+        <div className="absolute -bottom-[240px] -right-[240px] h-[560px] w-[560px] rounded-full bg-[#F59E0B] opacity-[0.20] md:-bottom-[300px] md:-right-[300px] md:h-[700px] md:w-[700px]" />
+        <div className="absolute -bottom-[340px] -right-[340px] h-[820px] w-[820px] rounded-full border-[66px] border-[#F59E0B] opacity-[0.14] md:-bottom-[420px] md:-right-[420px] md:h-[980px] md:w-[980px] md:border-[74px]" />
+        <div className="absolute -bottom-[380px] -right-[380px] h-[900px] w-[900px] rounded-full border-[42px] border-[#2563EB] opacity-[0.10] md:-bottom-[470px] md:-right-[470px] md:h-[1080px] md:w-[1080px] md:border-[50px]" />
+
+        {/* subtle dots */}
+        <div className="absolute inset-0 opacity-[0.22] bg-[radial-gradient(circle_at_1px_1px,rgba(15,23,42,0.20)_1px,transparent_0)] bg-[length:22px_22px]" />
+      </div>
+
+      <div className="relative z-10 pt-24 md:pt-32 pb-24 space-y-24 md:space-y-32">
+        {/* ---------------- 1) Hero ---------------- */}
+        <Wrap>
           <motion.div
-            variants={fadeLeft}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.25 }}
+            className="grid lg:grid-cols-[1.1fr_minmax(0,1fr)] gap-12 lg:gap-20 items-center"
           >
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-3 py-1 shadow-sm mb-3">
-              <span className="h-2 w-2 rounded-full bg-[#F59E0B]" />
-              <span className="text-[11px] md:text-xs font-semibold tracking-[0.18em] uppercase text-slate-100/90">
-                About Us
-              </span>
+            <motion.div variants={fadeLeft} transition={{ duration: 0.7, ease: "easeOut" }}>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.08] tracking-tight font-poppins text-slate-900">
+                We Are <br />
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-amber-500 bg-clip-text text-transparent">
+                  SoftNetwork
+                </span>
+              </h2>
+
+              <div className="mt-8 space-y-6 text-slate-600 text-sm md:text-base font-light leading-relaxed">
+                <p>
+                  SoftNetwork คือบริษัทผู้เชี่ยวชาญด้านการออกแบบและพัฒนาระบบคอมพิวเตอร์สำหรับองค์กร
+                  เรานำเสนอโซลูชันที่ช่วยให้ทุกภาคส่วนของธุรกิจสามารถทำงานได้อย่างมีประสิทธิภาพ
+                  <strong className="text-slate-900 font-medium"> ลดความซ้ำซ้อน </strong>
+                  และเพิ่มความแม่นยำในการจัดการข้อมูล
+                </p>
+
+                <p>
+                  เราดำเนินงานด้วยแนวคิด{" "}
+                  <span className="text-blue-600 font-semibold font-poppins">“Service Marketing”</span>{" "}
+                  ที่ให้ความสำคัญกับทั้งคุณภาพของซอฟต์แวร์และคุณภาพการให้บริการ เชื่อมต่อผู้ใช้งานจริง (User) เข้ากับกระบวนการ
+                  (Process) ด้วยมาตรฐานเทคโนโลยีแห่งอนาคต
+                </p>
+
+                <div className="pl-4 border-l-4 border-amber-200 text-slate-500 italic text-xs md:text-sm font-poppins">
+                  Smart, secure, and ready for enterprise.
+                </div>
+              </div>
+
+              <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                {aboutHighlights.map((item, i) => (
+                  <motion.li
+                    key={i}
+                    whileHover={{ scale: 1.02 }}
+                    className="flex items-start gap-3 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm"
+                  >
+                    <div className="mt-1 p-2 rounded-full bg-slate-50 border border-slate-100">
+                      <Zap className="w-4 h-4" style={{ color: item.color }} />
+                    </div>
+                    <span className="text-slate-700 text-sm font-medium leading-snug">{item.text}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+
+            <motion.div variants={fadeRight} transition={{ duration: 0.7, ease: "easeOut" }} className="relative">
+              <div className="absolute -top-8 -right-8 w-32 h-32 bg-blue-200 rounded-full blur-2xl opacity-60" />
+              <div className="absolute -bottom-8 -left-8 w-36 h-36 bg-amber-200 rounded-full blur-2xl opacity-60" />
+
+              <div className="relative grid grid-cols-2 gap-4 p-4 bg-white/70 backdrop-blur-md rounded-[2rem] border border-white/60 shadow-xl">
+                <div className="col-span-2 relative h-64 md:h-80 rounded-2xl overflow-hidden shadow-sm group">
+                  <Image
+                    src="/images/About/front.webp"
+                    alt="SoftNetwork office front"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    priority
+                  />
+                </div>
+
+                <div className="relative h-40 md:h-48 rounded-2xl overflow-hidden shadow-sm group">
+                  <Image
+                    src="/images/About/office.jpg"
+                    alt="Interior"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                </div>
+
+                <div className="relative h-40 md:h-48 rounded-2xl overflow-hidden shadow-sm group">
+                  <Image
+                    src="/images/About/meeting.jpg"
+                    alt="Meeting"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </Wrap>
+
+        {/* ---------------- 2) Values ---------------- */}
+        <Wrap>
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} className="relative">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="text-blue-600 font-poppins text-sm font-semibold tracking-wider uppercase">Core Values</span>
+              <h3 className="mt-3 text-3xl md:text-4xl font-bold text-slate-900 font-poppins">วิสัยทัศน์และพันธกิจ</h3>
+              <p className="mt-4 text-slate-600 text-lg">ขับเคลื่อนธุรกิจการเงินไทยด้วยนวัตกรรมที่จับต้องได้ และความเชื่อมั่นที่ยั่งยืน</p>
             </div>
 
-            <h2 className="section-title mb-4 text-white">
-              We Are{" "}
-              <span className="text-[#F59E0B] font-extrabold">SoftNetwork</span>
-            </h2>
-
-            <p className="text-sm md:text-base leading-relaxed text-slate-200/95">
-              SoftNetwork คือบริษัทผู้เชี่ยวชาญด้านการออกแบบและพัฒนาระบบคอมพิวเตอร์สำหรับองค์กร
-              เรานำเสนอโซลูชันที่ช่วยให้ทุกภาคส่วนของธุรกิจสามารถทำงานได้อย่างมีประสิทธิภาพ
-              ลดความซ้ำซ้อน และเพิ่มความแม่นยำในการจัดการข้อมูล
-              ตั้งแต่ระดับปฏิบัติการไปจนถึงระดับบริหารจัดการ
-            </p>
-
-            <p className="text-sm md:text-base leading-relaxed mt-4 text-slate-300">
-              เราดำเนินงานด้วยแนวคิด{" "}
-              <span className="font-semibold text-slate-50">
-                “Service Marketing”
-              </span>{" "}
-              ที่ให้ความสำคัญกับทั้งคุณภาพของซอฟต์แวร์
-              และคุณภาพการให้บริการ ทีมงานของเราออกแบบระบบโดยคำนึงถึง
-              ผู้ใช้งานจริง (User) กระบวนการทำงาน (Process)
-              และมาตรฐานด้านเทคโนโลยีไปพร้อมกัน
-            </p>
-
-            <p className="text-xs md:text-sm leading-relaxed mt-3 text-slate-400">
-              We design and build enterprise software that connects operations,
-              credit workflows and accounting into one reliable platform.
-            </p>
-
-            <ul className="mt-6 space-y-3 text-sm md:text-base text-slate-200">
-              <li className="flex items-start gap-2">
-                <Sparkles className="w-4 h-4 mt-[3px] text-[#F59E0B]" />
-                <span>
-                  ออกแบบโซลูชันให้สอดคล้องกับกระบวนการทำงานจริงขององค์กรคุณ
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Sparkles className="w-4 h-4 mt-[3px] text-[#3B82F6]" />
-                <span>
-                  รองรับการขยายตัวของธุรกิจในระยะยาว ทั้งด้านเทคนิคและการใช้งาน
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Sparkles className="w-4 h-4 mt-[3px] text-[#22C55E]" />
-                <span>
-                  ทีมงานพร้อมช่วยเหลือ ตั้งแต่เริ่มต้นจนถึงหลังการติดตั้งระบบ
-                </span>
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Images */}
-          <motion.div
-            variants={fadeRight}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="relative grid grid-cols-2 gap-4 lg:gap-5"
-          >
-            <div className="pointer-events-none absolute -right-8 -bottom-10 w-40 h-40 bg-[#F59E0B]/30 rounded-full blur-3xl" />
-            <div className="pointer-events-none absolute -left-10 -top-10 w-40 h-40 bg-[#3B82F6]/28 rounded-full blur-3xl" />
-
-            <motion.div
-              whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              className="relative col-span-2 h-52 sm:h-64 lg:h-72 rounded-3xl overflow-hidden shadow-[0_22px_60px_rgba(0,0,0,0.85)] border border-white/5"
-            >
-              <Image
-                src="/images/About/front.webp"
-                alt="SoftNetwork office front"
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 30rem, 80vw"
-                loading="eager"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
-            </motion.div>
-
-            <motion.div
-              whileHover={{ y: -6, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              className="relative h-32 sm:h-40 lg:h-44 rounded-2xl overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.8)] border border-white/5 bg-slate-900/50"
-            >
-              <Image
-                src="/images/About/office.jpg"
-                alt="SoftNetwork office environment"
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 14rem, 40vw"
-              />
-            </motion.div>
-
-            <motion.div
-              whileHover={{ y: -6, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              className="relative h-32 sm:h-40 lg:h-44 rounded-2xl overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.8)] border border-white/5 bg-slate-900/50"
-            >
-              <Image
-                src="/images/About/meeting.jpg"
-                alt="SoftNetwork meeting"
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 14rem, 40vw"
-              />
-            </motion.div>
-          </motion.div>
-        </motion.div>
-
-        {/* ---------- Vision / Mission ---------- */}
-        <motion.section
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          className="relative"
-        >
-          <div className="pointer-events-none absolute -left-32 -top-16 w-64 h-64 rounded-full bg-[#22c55e]/25 blur-3xl" />
-          <div className="pointer-events-none absolute -right-32 bottom-0 w-72 h-72 rounded-full bg-[#3b82f6]/25 blur-3xl" />
-
-          <div className="relative max-w-4xl mx-auto text-center mb-10">
-            <p className="text-[11px] md:text-xs uppercase tracking-[0.28em] text-amber-300">
-              Vision &amp; Mission
-            </p>
-            <h3 className="mt-3 text-2xl md:text-3xl font-extrabold text-white">
-              วิสัยทัศน์และพันธกิจของ SoftNetwork
-            </h3>
-            <p className="mt-4 text-sm md:text-base text-slate-300 leading-relaxed">
-              คอนเซ็ปต์เดียวกับหน้า About ของ TechSoftHolding
-              แต่ปรับเนื้อหาและโทนสีให้เข้ากับแบรนด์ SoftNetwork
-              เน้นความชัดเจน อ่านง่าย และบอก “เราเชื่อในอะไร”
-            </p>
-          </div>
-
-          <div className="relative grid gap-6 lg:gap-8 lg:grid-cols-2">
-            {/* Vision */}
-            <motion.article
-              variants={fadeUp}
-              transition={{ duration: 0.55, ease: "easeOut" }}
-              className="relative overflow-hidden rounded-3xl border border-slate-700/70 bg-gradient-to-br from-slate-950 via-slate-900/95 to-slate-950 px-6 py-7 md:px-8 md:py-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)]"
-            >
-              <div className="pointer-events-none absolute inset-px rounded-[1.4rem] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.28),transparent_55%)]" />
-              <div className="relative">
-                <div className="inline-flex items-center gap-2 rounded-full bg-slate-900/80 border border-slate-700/70 px-3 py-1 mb-4">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                  <span className="text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase text-slate-100">
-                    Our Vision
-                  </span>
-                </div>
-                <h4 className="text-lg md:text-xl font-semibold text-white">
-                  “เป็นทีมซอฟต์แวร์คู่คิดของธุรกิจการเงินไทย”
-                </h4>
-                <p className="mt-4 text-sm md:text-[15px] text-slate-200 leading-relaxed">
-                  มุ่งเน้นเป็นพันธมิตรด้านเทคโนโลยีให้กับธุรกิจสินเชื่อ
-                  เช่าซื้อ และองค์กรด้านการเงินในประเทศไทย
-                  ด้วยซอฟต์แวร์ที่เชื่อถือได้ ใช้งานง่าย
-                  และพร้อมเติบโตไปกับธุรกิจของลูกค้าในระยะยาว
-                </p>
-                <p className="mt-3 text-xs md:text-sm text-slate-400 leading-relaxed">
-                  We want our platform to be the trusted backbone of financial
-                  operations for our customers.
-                </p>
-              </div>
-            </motion.article>
-
-            {/* Mission */}
-            <motion.article
-              variants={fadeUp}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="relative overflow-hidden rounded-3xl border border-slate-700/70 bg-gradient-to-br from-slate-950 via-slate-900/95 to-slate-950 px-6 py-7 md:px-8 md:py-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)]"
-            >
-              <div className="pointer-events-none absolute inset-px rounded-[1.4rem] bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.32),transparent_55%)]" />
-              <div className="relative">
-                <div className="inline-flex items-center gap-2 rounded-full bg-slate-900/80 border border-slate-700/70 px-3 py-1 mb-4">
-                  <span className="h-2 w-2 rounded-full bg-sky-400" />
-                  <span className="text-[11px] md:text-xs font-semibold tracking-[0.22em] uppercase text-slate-100">
-                    Our Mission
-                  </span>
-                </div>
-                <h4 className="text-lg md:text-xl font-semibold text-white">
-                  ส่งมอบโซลูชันที่ “ใช้งานได้จริงในองค์กร”
-                </h4>
-                <ul className="mt-4 space-y-2.5 text-sm md:text-[15px] text-slate-200 leading-relaxed">
-                  <li>
-                    • วิเคราะห์กระบวนการทำงานจริงก่อนออกแบบระบบ
-                    เพื่อให้ซอฟต์แวร์สอดคล้องกับหน้างาน
-                  </li>
-                  <li>
-                    • สร้างมาตรฐานด้านข้อมูล ความถูกต้อง
-                    และความปลอดภัยที่องค์กรสามารถเชื่อใจได้
-                  </li>
-                  <li>
-                    • ดูแลตั้งแต่เริ่มวางแผน อิมพลีเมนต์
-                    ไปจนถึงการใช้งานจริงและการพัฒนาในอนาคต
-                  </li>
-                </ul>
-              </div>
-            </motion.article>
-          </div>
-        </motion.section>
-
-        {/* ---------- Timeline ---------- */}
-        <motion.section
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          className="relative pt-4"
-        >
-          {/* เส้นไทม์ไลน์แนวตั้งด้านซ้าย */}
-          <div className="absolute left-[11px] md:left-4 top-4 bottom-4 w-px bg-gradient-to-b from-slate-600 via-slate-500/70 to-slate-700/80" />
-
-          <div className="max-w-3xl mx-auto">
-            <div className="mb-8 md:mb-10 text-left md:text-center">
-              <p className="text-[11px] md:text-xs uppercase tracking-[0.28em] text-amber-300">
-                SoftNetwork Timeline
-              </p>
-              <h3 className="mt-3 text-2xl md:text-3xl font-extrabold text-white">
-                เส้นทางการพัฒนาซอฟต์แวร์กว่า 10+ ปี
-              </h3>
-              <p className="mt-4 text-sm md:text-base text-slate-300 leading-relaxed">
-                แรงบันดาลใจจาก Section Timeline “Over 19 Years” ของ
-                TechSoftHolding แต่เลย์เอาท์ปรับให้อ่านง่ายบนเว็บ SoftNetwork
-                แบบเลื่อนลงทีละช่วง
-              </p>
-            </div>
-
-            <div className="space-y-8 md:space-y-10">
-              {[
-                {
-                  year: "2010",
-                  title: "เริ่มต้นโครงการระบบงานตามสั่ง (Custom Enterprise)",
-                  label: "Custom Software Projects",
-                  points: [
-                    "พัฒนาระบบงานสำหรับธุรกิจบริการและองค์กรภาคเอกชน",
-                    "โฟกัสที่ความต้องการจริงของหน่วยงานและผู้ใช้งาน",
-                    "วางพื้นฐานด้านมาตรฐานโค้ดและโครงสร้างฐานข้อมูล",
-                  ],
-                },
-                {
-                  year: "2014",
-                  title: "โซลูชันด้านสินเชื่อและเช่าซื้อรุ่นแรก",
-                  label: "Loan & Hire Purchase Core",
-                  points: [
-                    "เริ่มออกแบบโซลูชันสำหรับธุรกิจสินเชื่อและเช่าซื้อโดยเฉพาะ",
-                    "รองรับการจัดเก็บข้อมูลลูกค้า สัญญา และตารางค่างวด",
-                    "เน้นความถูกต้องของข้อมูลทางการเงินเป็นหลัก",
-                  ],
-                },
-                {
-                  year: "2018",
-                  title: "พัฒนาระบบสู่ Web Application และ Multi-Branch",
-                  label: "Web-based & Multi-Branch",
-                  points: [
-                    "ย้ายสถาปัตยกรรมเข้าสู่ระบบ Web Application",
-                    "รองรับการใช้งานหลายสาขาในระบบเดียวกัน",
-                    "บริหารสิทธิ์การใช้งาน (User Permission) อย่างเป็นระบบ",
-                  ],
-                },
-                {
-                  year: "2022",
-                  title: "ยกระดับสู่แพลตฟอร์มที่รองรับ Cloud / Hybrid",
-                  label: "Cloud-ready Platform",
-                  points: [
-                    "ออกแบบระบบให้รองรับการใช้งานบน Cloud หรือ On-premise",
-                    "เพิ่มความยืดหยุ่นด้านสเกลและการเชื่อมต่อระบบอื่น",
-                    "เสริมความปลอดภัยและระบบสำรองข้อมูลที่ชัดเจน",
-                  ],
-                },
-                {
-                  year: "2024",
-                  title: "ก้าวสู่ยุค Automation & Analytics",
-                  label: "Automation & Insights",
-                  points: [
-                    "นำแนวคิด Automation และรายงานเชิงวิเคราะห์มาใช้ในระบบ",
-                    "ช่วยผู้บริหารเห็นภาพรวมพอร์ตสินเชื่อและความเสี่ยงได้ชัดขึ้น",
-                    "เตรียมความพร้อมสู่การใช้ AI มาช่วยสนับสนุนการตัดสินใจ",
-                  ],
-                },
-              ].map((step, index) => (
-                <motion.article
-                  key={step.year}
-                  variants={fadeUp}
-                  transition={{ duration: 0.45 + index * 0.05 }}
-                  className="relative pl-8 md:pl-12"
-                >
-                  {/* จุดบนเส้นไทม์ไลน์ */}
-                  <div className="absolute -left-[11px] md:-left-[15px] top-1.5 flex items-center justify-center">
-                    <div className="h-5 w-5 md:h-6 md:w-6 rounded-full border border-amber-300 bg-slate-950 shadow-[0_0_0_4px_rgba(15,23,42,0.9)] flex items-center justify-center">
-                      <span className="text-[9px] md:text-[10px] font-semibold text-amber-200">
-                        {index + 1}
-                      </span>
+            <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
+              <motion.div whileHover={{ y: -8 }} className="h-full">
+                <ModernCard className="h-full p-8 md:p-10 bg-gradient-to-br from-white to-blue-50/60">
+                  <div className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-blue-200 blur-3xl opacity-50" />
+                  <div className="relative">
+                    <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-100">
+                      <Radio className="w-4 h-4" />
+                      Strategy
                     </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-slate-700/70 bg-slate-900/80 px-4 py-4 md:px-6 md:py-5 shadow-[0_14px_36px_rgba(0,0,0,0.85)]">
-                    <div className="flex flex-wrap items-baseline gap-2 mb-1.5">
-                      <span className="text-xs md:text-sm font-semibold text-amber-300">
-                        {step.year}
-                      </span>
-                      <span className="text-[11px] md:text-xs font-medium uppercase tracking-[0.18em] text-sky-300/80">
-                        {step.label}
-                      </span>
-                    </div>
-                    <h4 className="text-sm md:text-base font-semibold text-white">
-                      {step.title}
+                    <h4 className="mt-6 text-2xl md:text-3xl font-bold text-slate-900">
+                      “เป็นทีมซอฟต์แวร์คู่คิดของธุรกิจการเงินไทย”
                     </h4>
-                    <ul className="mt-2.5 space-y-1.5 text-xs md:text-sm text-slate-200 leading-relaxed">
-                      {step.points.map((p) => (
-                        <li key={p}>• {p}</li>
-                      ))}
+                    <p className="mt-6 text-slate-600 leading-relaxed text-base">
+                      มุ่งเน้นเป็นพันธมิตรด้านเทคโนโลยีให้กับธุรกิจสินเชื่อ เช่าซื้อ และองค์กรด้านการเงิน ด้วย Platform ที่พร้อม
+                      Scale-up ไปกับธุรกิจในยุค Digital Era
+                    </p>
+                  </div>
+                </ModernCard>
+              </motion.div>
+
+              <motion.div whileHover={{ y: -8 }} className="h-full">
+                <ModernCard className="h-full p-8 md:p-10 bg-gradient-to-br from-white to-amber-50/60">
+                  <div className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-amber-200 blur-3xl opacity-50" />
+                  <div className="relative">
+                    <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-100">
+                      <Layers className="w-4 h-4" />
+                      Delivery
+                    </div>
+                    <h4 className="mt-6 text-2xl md:text-3xl font-bold text-slate-900">ส่งมอบโซลูชันที่ “ใช้งานได้จริงในองค์กร”</h4>
+                    <ul className="mt-6 space-y-4 text-slate-600 text-base">
+                      <li className="flex gap-3 items-start">
+                        <ArrowRight className="w-5 h-5 text-amber-500 mt-1 shrink-0" />
+                        <span>วิเคราะห์หน้างานจริง เพื่อ System Design ที่แม่นยำ</span>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <ArrowRight className="w-5 h-5 text-amber-500 mt-1 shrink-0" />
+                        <span>สร้าง Standard Data Security ระดับ Enterprise</span>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <ArrowRight className="w-5 h-5 text-amber-500 mt-1 shrink-0" />
+                        <span>End-to-end Support ตั้งแต่ Day 1 ถึงอนาคต</span>
+                      </li>
                     </ul>
                   </div>
-                </motion.article>
-              ))}
+                </ModernCard>
+              </motion.div>
             </div>
-          </div>
-        </motion.section>
+          </motion.div>
+        </Wrap>
+
+        {/* ---------------- 3) Timeline ---------------- */}
+        <div className="relative">
+          <Wrap>
+            <div className="text-center max-w-4xl mx-auto mb-20">
+              <span className="text-amber-600 font-poppins text-sm font-semibold tracking-wider uppercase">History</span>
+              <h3 className="mt-3 text-3xl md:text-4xl font-bold text-slate-900 font-poppins">Evolution of SoftNetwork</h3>
+              <p className="mt-4 text-slate-600 text-lg font-poppins">From 2004 to the Next Era of Fintech</p>
+            </div>
+          </Wrap>
+
+          <Wrap className="relative">
+            <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-200 via-indigo-200 to-amber-200 md:-translate-x-1/2" />
+
+            <div className="space-y-12 md:space-y-24">
+              {timelineSteps.map((step, index) => {
+                const isLeft = index % 2 === 0;
+                const meta = timelineMeta(index);
+                const { from, to } = meta;
+
+                const yearDisplay = step.year === "Next Decade" ? "NEXT" : step.year;
+
+                return (
+                  <motion.div
+                    key={`${step.year}-${index}`}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.28 }}
+                    className="relative grid grid-cols-[56px_1fr] md:grid-cols-2 gap-6 md:gap-16 items-start"
+                  >
+                    <div className="absolute left-[15px] md:left-1/2 md:-translate-x-1/2 top-6 z-10">
+                      <div className="relative w-5 h-5 rounded-full bg-white shadow-md">
+                        <div className="absolute inset-0 rounded-full" style={{ backgroundImage: `linear-gradient(90deg, ${from}, ${to})` }} />
+                        <div className="absolute -inset-3 rounded-full opacity-20 blur-[2px]" style={{ backgroundImage: `linear-gradient(90deg, ${from}, ${to})` }} />
+                      </div>
+                    </div>
+
+                    <div className={`md:text-right ${isLeft ? "order-1" : "order-1 md:order-2"}`}>
+                      {isLeft && (
+                        <motion.div variants={fadeLeft} className="hidden md:flex justify-end pr-8">
+                          <GradientYear from={from} to={to} opacity={0.30}>
+                            {yearDisplay}
+                          </GradientYear>
+                        </motion.div>
+                      )}
+
+                      {!isLeft && (
+                        <motion.div variants={fadeLeft} className="col-span-1 md:col-auto pl-2 md:pl-0">
+                          <TimelineCard step={step} meta={meta} align="right" />
+                          <div className="md:hidden mt-4 pl-1">
+                            <GradientYear from={from} to={to} opacity={0.70} className="text-4xl">
+                              {yearDisplay}
+                            </GradientYear>
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+
+                    <div className={`md:text-left ${!isLeft ? "order-2" : "order-2 md:order-1"}`}>
+                      {!isLeft && (
+                        <motion.div variants={fadeRight} className="hidden md:flex justify-start pl-8">
+                          <GradientYear from={from} to={to} opacity={0.30}>
+                            {yearDisplay}
+                          </GradientYear>
+                        </motion.div>
+                      )}
+
+                      {isLeft && (
+                        <motion.div variants={fadeRight} className="col-span-1 md:col-auto pl-2 md:pl-0">
+                          <TimelineCard step={step} meta={meta} align="left" />
+                          <div className="md:hidden mt-4 pl-1">
+                            <GradientYear from={from} to={to} opacity={0.70} className="text-4xl">
+                              {yearDisplay}
+                            </GradientYear>
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </Wrap>
+        </div>
       </div>
     </section>
   );

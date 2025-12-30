@@ -1,259 +1,176 @@
 "use client";
 
-import { Car, Banknote, PieChart, ArrowUpRight, PhoneCall } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { Poppins, Kanit } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+
+const kanit = Kanit({
+  subsets: ["thai", "latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 18 },
   visible: { opacity: 1, y: 0 },
 };
 
 const stagger = {
   hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.15 },
-  },
+  visible: { transition: { staggerChildren: 0.08 } },
 };
 
-// 3 โซลูชันหลักของ SoftNetwork
-const solutionsData = [
+const solutions = [
   {
     slug: "hire-purchase",
     title: "Hire Purchase System",
-    name: "ระบบบริหารจัดการสินเชื่อเช่าซื้อ",
-    icon: Car,
+    eyebrow: "End-to-end hire purchase operations",
     image: "/images/solutions/hp-new.jpg",
-    desc: "โซลูชันสำหรับบริหารจัดการสินเชื่อเช่าซื้อแบบครบวงจร รองรับตั้งแต่การตรวจสอบข้อมูลลูกค้า การอนุมัติสินเชื่อ การทำสัญญา การจัดตารางค่างวด การติดตามสถานะ ไปจนถึงการออกเอกสารและรายงานต่าง ๆ ออกแบบให้สอดคล้องกับมาตรฐานด้านบัญชีและข้อกำหนดทางกฎหมายอย่างครบถ้วน",
+    body: "A complete hire purchase platform built for verification, approval, contract execution, installment scheduling, asset tracking, and collections. Designed for operational reliability, audit readiness, and compliance—so teams can scale portfolios with confidence.",
   },
   {
     slug: "lending-management",
     title: "Lending Management System",
-    name: "ระบบบริหารจัดการสินเชื่อเงินกู้",
-    icon: Banknote,
+    eyebrow: "Flexible lending products, accurate calculations",
     image: "/images/solutions/lending-v2.jpg",
-    desc: "ระบบบริหารจัดการสินเชื่อเงินกู้ที่ยืดหยุ่นและแม่นยำ รองรับทั้งสินเชื่อแบบมีหลักประกันและไม่มีหลักประกัน สามารถกำหนดรูปแบบดอกเบี้ยได้หลากหลาย พร้อมระบบคำนวณและตัดชำระที่ถูกต้อง โปร่งใส เหมาะสำหรับองค์กรที่ให้ความสำคัญกับการบริหารความเสี่ยงและคุณภาพพอร์ตสินเชื่อ",
+    body: "A modern lending management system supporting secured and unsecured products with configurable interest schemes and repayment structures. Delivers transparent calculations, consistent posting logic, and real-time portfolio visibility to strengthen risk control and service quality.",
   },
   {
     slug: "accounting-system",
     title: "Accounting System",
-    name: "ระบบบัญชีสำหรับองค์กร",
-    icon: PieChart,
+    eyebrow: "Connected finance, faster closing",
     image: "/images/solutions/acc-modern.jpg",
-    desc: "ระบบบัญชีสำหรับองค์กรที่ต้องการความถูกต้อง รวดเร็ว และเชื่อมโยงข้อมูลอย่างเป็นระบบ รองรับการบันทึกบัญชีและจัดทำงบการเงินอัตโนมัติ ลดความซ้ำซ้อนด้วยการเชื่อมข้อมูลจากระบบสินเชื่อและระบบงานอื่น ๆ ช่วยให้ฝ่ายบัญชีและผู้บริหารเห็นตัวเลขเดียวกันและตัดสินใจได้อย่างมั่นใจ",
+    body: "An accounting suite designed for finance organizations that need speed, accuracy, and clean integrations. Automates postings from lending workflows, reduces manual reconciliation, and produces management-ready financial reports—helping stakeholders align on a single source of truth.",
   },
 ];
 
+function MediaBlock({ src, alt, className, rounded = "rounded-2xl" }) {
+  return (
+    <div className={`${className} ${rounded} relative overflow-hidden bg-slate-200 shadow-[0_18px_55px_rgba(2,6,23,0.10)] ring-1 ring-slate-200`}>
+      <Image src={src} alt={alt} fill sizes="(max-width: 1024px) 92vw, 520px" className="object-cover object-center" priority={false} />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/12" />
+    </div>
+  );
+}
+
+function TextBlock({ title, eyebrow, body, align = "left" }) {
+  const alignCls = align === "right" ? "text-left lg:text-right" : "text-left";
+  const maxCls = align === "right" ? "lg:ml-auto" : "";
+  return (
+    <div className={`${alignCls} ${maxCls} max-w-xl`}>
+      <p className="text-xs font-semibold tracking-[0.22em] uppercase text-slate-500">{eyebrow}</p>
+      <h2 className="mt-2 text-2xl md:text-3xl font-black tracking-tight text-slate-900">{title}</h2>
+      <p className="mt-3 text-sm md:text-base leading-relaxed text-slate-600">{body}</p>
+      {/* ✅ เอาปุ่ม View details ออกแล้ว */}
+    </div>
+  );
+}
+
 export default function SolutionsPage() {
   return (
-    <>
-      {/* HERO + CARD 3 ใบ */}
-      <section
-        id="solutions"
-        className="relative min-h-screen scroll-mt-[140px] pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24 overflow-hidden bg-[radial-gradient(circle_at_top,_#fffbeb,_#ffffff_45%,_#e0f2fe)]"
-      >
-        {/* พื้นหลังโทนสว่างอ่านง่าย */}
-        <div className="pointer-events-none absolute -left-32 top-24 h-64 w-64 rounded-full bg-[#F59E0B]/18 blur-3xl" />
-        <div className="pointer-events-none absolute -right-40 bottom-0 h-80 w-80 rounded-full bg-[#3B82F6]/20 blur-3xl" />
-        <div className="pointer-events-none absolute inset-x-10 bottom-4 h-32 bg-[radial-gradient(circle_at_center,_rgba(15,23,42,0.08),_transparent_70%)] opacity-70" />
+    <main id="solutions" className="min-h-screen bg-[#FBF7F2]" style={{ fontFamily: `${poppins.style.fontFamily}, ${kanit.style.fontFamily}, ui-sans-serif, system-ui, sans-serif` }}>
+      {/* HERO */}
+      <section className="relative pt-24 md:pt-28 pb-10 md:pb-12 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-44 -top-44 h-[420px] w-[420px] rounded-full bg-[#F59E0B]/10 blur-3xl" />
+          <div className="absolute -right-56 -top-56 h-[520px] w-[520px] rounded-full bg-[#2563EB]/10 blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-transparent to-transparent" />
+        </div>
 
-        <div className="container relative z-10">
-          {/* จำกัดความกว้างให้อยู่กลางหน้าชัดๆ */}
-          <div className="max-w-6xl mx-auto">
-            {/* HERO ซ้ายข้อความ / ขวารูป */}
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.35 }}
-              className="grid gap-10 lg:gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] items-center"
-            >
-              {/* ด้านซ้าย: ข้อความ hero */}
-              <motion.div variants={fadeUp}>
-                <p className="text-[11px] md:text-xs uppercase tracking-[0.3em] text-[#3B82F6]">
-                  Solutions
-                </p>
-                <h1 className="mt-3 text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900">
-                  SoftNetwork Solutions
-                  <span className="block mt-2 text-lg md:text-2xl font-semibold text-[#F97316]">
-                    ระบบซอฟต์แวร์สำหรับธุรกิจสินเชื่อ เช่าซื้อ และบัญชี
-                  </span>
-                </h1>
-                <p className="mt-4 text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
-                  รวมโซลูชันหลักของ SoftNetwork ที่ออกแบบสำหรับธุรกิจการเงินในประเทศไทย
-                  เชื่อมโยงตั้งแต่ระบบเช่าซื้อ (Hire Purchase) ระบบสินเชื่อเงินกู้ (Lending)
-                  จนถึงระบบบัญชี ให้ข้อมูลทุกส่วนทำงานร่วมกันในแพลตฟอร์มเดียวอย่างลงตัว
-                </p>
-                <p className="mt-3 text-xs md:text-sm text-slate-500 max-w-xl">
-                  ใช้งานได้ทั้งแบบเลือกเฉพาะระบบที่ต้องการ
-                  หรือเชื่อมต่อทั้งแพลตฟอร์มเพื่อสร้าง Workflow ที่ครบวงจร
-                  รองรับการเติบโตขององค์กรในระยะยาว
-                </p>
-                <p className="mt-3 text-xs md:text-sm text-slate-500">
-                  Powerful, integrated platforms designed for Thai financial
-                  institutions and modern lending businesses.
-                </p>
-              </motion.div>
-
-              {/* ด้านขวา: การ์ดภาพ hero */}
-              <motion.div
-                variants={fadeUp}
-                transition={{ duration: 0.65, ease: "easeOut" }}
-                className="relative"
-              >
-                <div className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.24),transparent_55%)]" />
-
-                <div className="relative rounded-[2.3rem] bg-white shadow-[0_26px_80px_rgba(15,23,42,0.22)] border border-slate-100 overflow-hidden">
-                  <div className="relative h-48 sm:h-56">
-                    <Image
-                      src="/images/solutions/hp-new.jpg"
-                      alt="SoftNetwork financial solutions"
-                      fill
-                      className="object-cover w-full h-full"
-                      sizes="(min-width:1024px) 26rem, (min-width:768px) 50vw, 90vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/10 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3 text-white">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.22em] text-amber-300">
-                          Core Platforms
-                        </p>
-                        <p className="text-sm md:text-base font-semibold">
-                          Hire Purchase • Lending • Accounting
-                        </p>
-                      </div>
-                      <div className="hidden sm:flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px]">
-                        <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                        <span>Production Ready</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="px-5 py-4 md:px-6 md:py-5 bg-white">
-                    <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
-                      รองรับโครงสร้างองค์กรหลายสาขา การกำหนดสิทธิ์ผู้ใช้งาน
-                      และการเชื่อมข้อมูลกับระบบบัญชีและระบบเดิมขององค์กร
-                      เพื่อให้การทำงานต่อเนื่องไม่สะดุด และบริหารข้อมูลได้จากศูนย์กลาง
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* GRID การ์ด Solutions 3 ใบ อยู่กลางหน้า */}
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.25 }}
-              className="mt-12 md:mt-16 grid gap-8 md:gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-            >
-              {solutionsData.map((sol) => {
-                const Icon = sol.icon;
-                return (
-                  <motion.article
-                    key={sol.slug}
-                    variants={fadeUp}
-                    transition={{ duration: 0.55, ease: "easeOut" }}
-                    whileHover={{ y: -8, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group w-full"
-                  >
-                    <div className="relative rounded-[2rem] overflow-hidden shadow-[0_22px_60px_rgba(15,23,42,0.16)] bg-white">
-                      {/* ภาพด้านบนการ์ด */}
-                      <div className="relative h-48 sm:h-52">
-                        {sol.image ? (
-                          <Image
-                            src={sol.image}
-                            alt={sol.title}
-                            fill
-                            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-                            sizes="(min-width: 1024px) 20rem, (min-width: 768px) 40vw, 90vw"
-                          />
-                        ) : (
-                          <div className="h-full w-full bg-gradient-to-tr from-orange-50 via-white to-sky-50" />
-                        )}
-                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 via-black/15 to-transparent opacity-80" />
-                      </div>
-
-                      {/* กล่องรายละเอียดซ้อนด้านล่าง */}
-                      <div className="relative -mt-8 mx-5 mb-6 rounded-2xl bg-white/95 border border-slate-100 px-5 py-5 md:px-6 md:py-6 shadow-[0_20px_45px_rgba(15,23,42,0.18)]">
-                        {/* ไอคอนวงกลม */}
-                        <div className="absolute -top-6 left-5">
-                          <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#F59E0B] text-white shadow-lg">
-                            <Icon className="w-5 h-5" />
-                          </div>
-                        </div>
-
-                        <div className="pt-2">
-                          <h2 className="text-sm sm:text-base md:text-lg font-semibold text-slate-900">
-                            {sol.title}
-                          </h2>
-                          <p className="mt-1 text-xs sm:text-sm font-medium text-[#F97316]">
-                            {sol.name}
-                          </p>
-                          <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                            {sol.desc}
-                          </p>
-
-                          <button className="mt-4 inline-flex items-center text-[11px] sm:text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8]">
-                            <span>ดูรายละเอียดฟังก์ชันภายในระบบ</span>
-                            <ArrowUpRight className="w-4 h-4 ml-1" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.article>
-                );
-              })}
-            </motion.div>
-          </div>
+        <div className="relative mx-auto max-w-6xl px-6">
+          <motion.div variants={stagger} initial="hidden" animate="visible" className="text-center">
+            {/* ✅ เอาคำว่า Solutions ด้านบนสุดออกแล้ว */}
+            <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900">
+              Built for Lending Operations
+            </motion.h1>
+            <motion.p variants={fadeUp} className="mt-4 max-w-2xl mx-auto text-sm md:text-base text-slate-600 leading-relaxed">
+              Three core platforms designed for financial institutions and modern lenders—optimized for reliability, compliance, and operational clarity.
+            </motion.p>
+          </motion.div>
         </div>
       </section>
 
-      {/* CTA ท้ายหน้า */}
-      <section className="relative bg-slate-950 py-14 md:py-16">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.4),_transparent_60%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(245,158,11,0.35),_transparent_60%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950 to-slate-950" />
+      {/* CANVAS LAYOUT */}
+      <section className="relative pb-20 md:pb-24">
+        <div className="relative mx-auto max-w-6xl px-6">
+          <div className="pointer-events-none absolute -left-6 top-16 select-none">
+            <span className="text-[72px] md:text-[110px] font-black tracking-tight text-slate-200/60">Solutions</span>
+          </div>
 
-        <div className="container relative z-10">
-          <div className="max-w-5xl mx-auto">
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.35 }}
-              className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8"
-            >
-              <div className="max-w-xl text-center md:text-left">
-                <p className="text-[11px] md:text-xs uppercase tracking-[0.28em] text-amber-300">
-                  Need a Demo?
-                </p>
-                <h2 className="mt-2 text-2xl md:text-3xl font-extrabold text-white">
-                  อยากดูระบบจริง หรือปรึกษาโซลูชันที่เหมาะกับธุรกิจของคุณ?
-                </h2>
-                <p className="mt-3 text-sm md:text-base text-slate-300 leading-relaxed">
-                  ทีมงาน SoftNetwork พร้อมช่วยวิเคราะห์ความต้องการของคุณ
-                  แนะนำโครงสร้างระบบ และออกแบบโซลูชันให้เหมาะกับรูปแบบธุรกิจ
-                  ทั้งสำหรับองค์กรที่เริ่มต้นใหม่ และองค์กรที่ต้องการปรับปรุงระบบเดิม
-                </p>
-              </div>
+          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.18 }} className="relative">
+            {/* DESKTOP */}
+            <div className="hidden lg:block">
+              <div className="relative min-h-[860px]">
+                <motion.div variants={fadeUp} className="absolute left-0 top-0 w-[380px] h-[380px]">
+                  <MediaBlock src={solutions[0].image} alt={solutions[0].title} className="w-full h-full" rounded="rounded-3xl" />
+                </motion.div>
+                <motion.div variants={fadeUp} className="absolute right-0 top-8">
+                  <TextBlock title={solutions[0].title} eyebrow={solutions[0].eyebrow} body={solutions[0].body} align="right" />
+                </motion.div>
 
-              <div className="flex flex-col items-center md:items-end gap-3">
-                <button className="inline-flex items-center gap-2 rounded-full bg-[#F59E0B] px-6 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-semibold text-slate-900 shadow-[0_18px_40px_rgba(0,0,0,0.5)] hover:bg-[#fbbf24] transition-colors">
-                  <PhoneCall className="w-4 h-4" />
-                  <span>ติดต่อทีมงาน SoftNetwork</span>
-                </button>
-                <p className="text-xs md:text-sm text-slate-400 text-center md:text-right">
-                  หรือดูข้อมูลติดต่อได้ที่เมนู{" "}
-                  <span className="font-semibold">Contact</span> ด้านบนของเว็บไซต์
-                </p>
+                <motion.div variants={fadeUp} className="absolute right-0 top-[360px] w-[520px] h-[280px]">
+                  <MediaBlock src={solutions[1].image} alt={solutions[1].title} className="w-full h-full" rounded="rounded-3xl" />
+                </motion.div>
+                <motion.div variants={fadeUp} className="absolute left-0 top-[430px]">
+                  <TextBlock title={solutions[1].title} eyebrow={solutions[1].eyebrow} body={solutions[1].body} align="left" />
+                </motion.div>
+
+                <motion.div variants={fadeUp} className="absolute left-0 top-[650px] w-[520px] h-[290px]">
+                  <MediaBlock src={solutions[2].image} alt={solutions[2].title} className="w-full h-full" rounded="rounded-3xl" />
+                </motion.div>
+                <motion.div variants={fadeUp} className="absolute right-0 top-[710px]">
+                  <TextBlock title={solutions[2].title} eyebrow={solutions[2].eyebrow} body={solutions[2].body} align="right" />
+                </motion.div>
               </div>
-            </motion.div>
+            </div>
+
+            {/* MOBILE/TABLET */}
+            <div className="lg:hidden space-y-12">
+              <motion.div variants={fadeUp} className="space-y-6">
+                <MediaBlock src={solutions[0].image} alt={solutions[0].title} className="w-full h-[260px] sm:h-[320px]" rounded="rounded-3xl" />
+                <TextBlock title={solutions[0].title} eyebrow={solutions[0].eyebrow} body={solutions[0].body} align="left" />
+              </motion.div>
+
+              <motion.div variants={fadeUp} className="space-y-6">
+                <MediaBlock src={solutions[1].image} alt={solutions[1].title} className="w-full h-[240px] sm:h-[300px]" rounded="rounded-3xl" />
+                <TextBlock title={solutions[1].title} eyebrow={solutions[1].eyebrow} body={solutions[1].body} align="left" />
+              </motion.div>
+
+              <motion.div variants={fadeUp} className="space-y-6">
+                <MediaBlock src={solutions[2].image} alt={solutions[2].title} className="w-full h-[240px] sm:h-[300px]" rounded="rounded-3xl" />
+                <TextBlock title={solutions[2].title} eyebrow={solutions[2].eyebrow} body={solutions[2].body} align="left" />
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* FOOT STRIP */}
+      <section className="bg-slate-950 py-14 md:py-16">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="text-center md:text-left">
+              <p className="text-xs font-semibold tracking-[0.22em] uppercase text-slate-400">Next step</p>
+              <h3 className="mt-2 text-2xl md:text-3xl font-black text-white">Request a demo or talk to our team</h3>
+              <p className="mt-2 text-sm text-slate-300 max-w-2xl">
+                Tell us your business model and portfolio needs—our team will recommend the best configuration across hire purchase, lending, and accounting.
+              </p>
+            </div>
+
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full bg-[#F59E0B] px-7 py-3 text-sm font-black text-white shadow-[0_18px_55px_rgba(245,158,11,0.28)] hover:brightness-95 transition">
+              Contact Us <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>
-    </>
+    </main>
   );
 }

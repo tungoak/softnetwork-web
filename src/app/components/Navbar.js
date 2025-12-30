@@ -1,194 +1,258 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Phone, Mail, Facebook } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { Phone, Mail, Facebook, Menu, X } from "lucide-react";
 
-const links = [
+/** ✅ Reordered: HOME, ABOUT, SOLUTIONS, SERVICES, CUSTOMERS */
+const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/solutions", label: "Solutions" },
   { href: "/services", label: "Services" },
   { href: "/customers", label: "Customers" },
-  { href: "/contact", label: "Contact" },
 ];
 
+const TOP_ITEMS = [
+  { Icon: Phone, text: "081 750 4393", href: "tel:0817504393", key: "call" },
+  { Icon: Mail, text: "sn-info@softnetwork.co.th", href: "mailto:sn-info@softnetwork.co.th", key: "email" },
+];
+
+function cx(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setOpen(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const [open, setOpen] = useState(false);
 
   const isActive = (href) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
 
+  // ปิดเมนูเมื่อเปลี่ยนหน้า
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // ล็อกสกอลล์ตอนเมนูเปิด + ปิดด้วย ESC
+  useEffect(() => {
+    if (!open) return;
+
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  const contactBtnClass = useMemo(
+    () =>
+      cx(
+        "inline-flex items-center justify-center rounded-full sn-blue-gradient",
+        "px-4 py-2 text-xs font-semibold text-white",
+        "shadow-md shadow-blue-500/25 hover:opacity-95 transition-opacity",
+        "tracking-[0.12em] uppercase whitespace-nowrap",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300/70 focus-visible:ring-offset-2"
+      ),
+    []
+  );
+
+  const mobileLinkClass = (active) =>
+    cx(
+      "flex items-center justify-between rounded-2xl px-4 py-3",
+      "text-[12px] font-semibold uppercase tracking-[0.10em]",
+      active ? "bg-slate-900 text-white" : "bg-slate-50 text-slate-800 hover:bg-slate-100",
+      "ring-1 ring-slate-200",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2"
+    );
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 shadow-sm">
-      {/* ========== MIDDLE BAR (LOGO + CONTACT) ========== */}
-      <div className="bg-white/95 backdrop-blur border-b border-slate-200">
+    <header className="fixed inset-x-0 top-0 z-50 font-kanit">
+      {/* ================= TOP BAR ================= */}
+      <div className="relative z-50 bg-[color:var(--sn-orange)] text-white font-poppins">
         <div className="container">
-          <div className="flex items-center justify-between gap-4 md:gap-6 py-3 md:py-4">
-            {/* LOGO + BRAND */}
-            <Link href="/" className="flex items-center gap-3 md:gap-4 group">
-              <div className="relative h-8 md:h-10 lg:h-12 w-[150px] md:w-[190px] lg:w-[220px]">
-                <Image
-                  src="/snblacklogo.svg"
-                  alt="SoftNetwork logo"
-                  fill
-                  className="object-contain"
-                  priority
-                />
+          <div className="flex items-center justify-between gap-3 py-2 text-[12px] md:text-[13px] leading-none">
+            {/* Left: Phone (always) + Email (sm+) */}
+            <div className="flex items-center gap-4 min-w-0">
+              {TOP_ITEMS.map(({ Icon, text, href, key }) => (
+                <a
+                  key={key}
+                  href={href}
+                  className={cx(
+                    "inline-flex items-center gap-2 rounded-md px-1",
+                    "text-white/95 hover:text-white transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+                    key === "email" ? "hidden sm:inline-flex" : ""
+                  )}
+                >
+                  <Icon className="h-4 w-4 text-white/90 shrink-0" />
+                  <span className="font-medium tracking-[0.04em] truncate">{text}</span>
+                </a>
+              ))}
+            </div>
+
+            {/* Right: FOLLOW US (sm+) | Facebook */}
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline text-[11px] font-semibold uppercase tracking-[0.12em] text-white/90">
+                FOLLOW US
+              </span>
+              <span className="hidden sm:block h-4 w-px bg-white/40" aria-hidden="true" />
+              <a
+                href="https://www.facebook.com/softnetwork2004"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className={cx(
+                  "inline-flex h-7 w-7 items-center justify-center rounded-md",
+                  "hover:bg-black/10 transition",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                )}
+              >
+                <Facebook className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ================= MAIN NAV ================= */}
+      <div className="-mt-px relative z-50 bg-white border-b border-slate-200 shadow-[0_10px_30px_rgba(15,23,42,0.08)]">
+        <div className="container">
+          <div className="flex items-center justify-between gap-4 py-4">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3" aria-label="SoftNetwork Home">
+              <div className="relative h-10 w-[155px] sm:w-[190px]">
+                <Image src="/snblacklogo.svg" alt="SoftNetwork logo" fill priority className="object-contain" sizes="190px" />
               </div>
             </Link>
 
-            {/* RIGHT: CONTACT + CTA + MOBILE MENU */}
-            <div className="flex items-center gap-4 md:gap-6">
-              {/* Call / Email (Desktop) */}
-              <div className="hidden lg:flex items-center gap-6 text-xs">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full border border-amber-300/70 bg-amber-50 text-[#F59E0B]">
-                    <Phone className="w-4 h-4" />
-                  </div>
-                  <div className="text-left leading-tight">
-                    <div className="font-semibold text-slate-700">Call Us</div>
-                    <a
-                      href="tel:0817504393"
-                      className="text-slate-500 hover:text-slate-700"
-                    >
-                      081-750-4393
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full border border-sky-300/70 bg-sky-50 text-[#1E6BB8]">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <div className="text-left leading-tight">
-                    <div className="font-semibold text-slate-700">Email</div>
-                    <a
-                      href="mailto:sn-info@softnetwork.co.th"
-                      className="text-slate-500 hover:text-slate-700"
-                    >
-                      sn-info@softnetwork.co.th
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA CONTACT US (Desktop) */}
-              <Link
-                href="/contact"
-                className="hidden md:inline-flex items-center justify-center rounded-full sn-blue-gradient px-4 md:px-5 py-2 text-xs md:text-sm font-semibold text-white shadow-md shadow-blue-500/25 hover:opacity-95 transition-opacity"
-              >
+            {/* Desktop Nav */}
+            <nav aria-label="Main navigation" className="hidden md:flex flex-1 items-center justify-end font-poppins">
+              <ul className="flex items-center gap-6 lg:gap-8">
+                {NAV_LINKS.map((link) => {
+                  const active = isActive(link.href);
+                  return (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        aria-current={active ? "page" : undefined}
+                        className={cx(
+                          "relative py-1 rounded-sm",
+                          "text-[12px] lg:text-[13px] font-semibold uppercase tracking-[0.10em]",
+                          active ? "text-slate-900" : "text-slate-600",
+                          "hover:text-slate-900 transition-colors",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2",
+                          "after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:rounded-full after:bg-slate-900 after:transition-all",
+                          active ? "after:w-full" : "after:w-0 hover:after:w-full"
+                        )}
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+              <Link href="/contact" className={cx("ml-6", contactBtnClass)}>
                 CONTACT US
               </Link>
+            </nav>
 
-              {/* MOBILE MENU BUTTON */}
+            {/* Mobile: Contact + Hamburger */}
+            <div className="md:hidden flex items-center gap-2">
+              <Link href="/contact" className={cx("hidden xs:inline-flex", contactBtnClass)}>
+                CONTACT
+              </Link>
+
               <button
                 type="button"
-                onClick={() => setOpen((prev) => !prev)}
-                className="inline-flex md:hidden items-center justify-center rounded-full border border-slate-300 px-3 py-1.5 text-[11px] font-medium text-slate-700 bg-white"
+                aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
-                aria-controls="mobile-nav"
-                aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+                onClick={() => setOpen((v) => !v)}
+                className={cx(
+                  "inline-flex items-center justify-center rounded-2xl",
+                  "h-10 w-10",
+                  "bg-slate-900 text-white",
+                  "shadow-[0_10px_30px_rgba(15,23,42,0.18)]",
+                  "hover:opacity-95 transition",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2"
+                )}
               >
-                {open ? "Close" : "Menu"}
+                {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* ========== BOTTOM BAR (DESKTOP MAIN MENU) ========== */}
-      <div className="hidden md:block bg-[#F59E0B] text-white">
-        <div className="container">
-          <nav aria-label="Main navigation" className="nav-underline">
-            <ul className="flex items-center justify-center gap-5 lg:gap-8 py-2.5 text-[13px] md:text-sm font-semibold tracking-wide">
-              {links.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={`relative px-1.5 pb-1 hover:text-white ${
-                      isActive(link.href) ? "text-white" : "text-white/85"
-                    }`}
-                    data-role="navlink"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </div>
+        {/* Mobile Drawer */}
+        {open && (
+          <div className="md:hidden">
+            {/* Backdrop */}
+            <button
+              aria-label="Close menu backdrop"
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 z-40 bg-black/30"
+            />
 
-      {/* ========== MOBILE NAV ========== */}
-      {open && (
-        <div
-          id="mobile-nav"
-          className="md:hidden bg-white/95 backdrop-blur border-b border-slate-200 shadow-lg"
-        >
-          <div className="container py-3 space-y-2 text-sm">
-            <nav aria-label="Mobile navigation">
-              {links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="block w-full text-left rounded-md px-2.5 py-2 text-slate-700 hover:bg-slate-100"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+            {/* Panel */}
+            <div className="relative z-50 bg-white border-t border-slate-200 shadow-[0_20px_60px_rgba(2,6,23,0.16)]">
+              <div className="container py-4 font-poppins">
+                <div className="grid gap-3">
+                  {NAV_LINKS.map((link) => {
+                    const active = isActive(link.href);
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        aria-current={active ? "page" : undefined}
+                        onClick={() => setOpen(false)}
+                        className={mobileLinkClass(active)}
+                      >
+                        <span>{link.label}</span>
+                        <span className={cx("text-xs", active ? "text-white/70" : "text-slate-400")}>›</span>
+                      </Link>
+                    );
+                  })}
 
-            <div className="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-600 space-y-2">
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#F59E0B]" />
-                <a href="tel:0817504393">081-750-4393</a>
+                  <div className="pt-2">
+                    <Link href="/contact" onClick={() => setOpen(false)} className={cx("w-full", contactBtnClass)}>
+                      CONTACT US
+                    </Link>
+                  </div>
+
+                  {/* Optional: show email in drawer (เพราะ top bar ซ่อนบนจอเล็ก) */}
+                  <div className="pt-4 border-t border-slate-200">
+                    <a
+                      href="mailto:sn-info@softnetwork.co.th"
+                      className="flex items-center gap-2 text-sm text-slate-700 hover:text-slate-900 transition"
+                    >
+                      <Mail className="h-4 w-4" />
+                      <span className="font-medium">sn-info@softnetwork.co.th</span>
+                    </a>
+                    <a
+                      href="tel:0817504393"
+                      className="mt-2 flex items-center gap-2 text-sm text-slate-700 hover:text-slate-900 transition"
+                    >
+                      <Phone className="h-4 w-4" />
+                      <span className="font-medium">081 750 4393</span>
+                    </a>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#1E6BB8]" />
-                <a href="mailto:sn-info@softnetwork.co.th">
-                  sn-info@softnetwork.co.th
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <Facebook className="w-4 h-4 text-slate-700" />
-                <a
-                  href="https://www.facebook.com/softnetwork2004"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Facebook Page
-                </a>
-              </div>
-
-              <Link
-                href="/contact"
-                onClick={() => setOpen(false)}
-                className="mt-2 w-full inline-flex items-center justify-center rounded-full sn-blue-gradient px-4 py-2 text-xs font-semibold text-white shadow-md shadow-blue-500/25 hover:opacity-95 transition-opacity"
-              >
-                CONTACT US
-              </Link>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 }

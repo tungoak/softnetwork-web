@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Sarabun, Prompt, Poppins, Kanit } from "next/font/google";
+import { Prompt, Poppins, Kanit } from "next/font/google";
 import Navbar from "./components/Navbar";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,13 +10,6 @@ const kanit = Kanit({
   weight: ["300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
   variable: "--font-kanit",
-});
-
-const sarabun = Sarabun({
-  subsets: ["latin", "thai"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-  variable: "--font-sarabun",
 });
 
 const prompt = Prompt({
@@ -38,8 +31,7 @@ const poppins = Poppins({
 export const metadata = {
   metadataBase: new URL("https://softnetwork-web.vercel.app"),
   title: {
-    default:
-      "SoftNetwork | ซอฟต์แวร์สำหรับธุรกิจสินเชื่อ เช่าซื้อ และระบบบัญชี",
+    default: "SoftNetwork",
     template: "%s | SoftNetwork",
   },
   description:
@@ -104,18 +96,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="th" className="scroll-smooth">
       <body
-        className={`${kanit.variable} ${poppins.variable} ${prompt.variable} ${sarabun.variable} bg-white text-slate-900 antialiased selection:bg-amber-100 selection:text-slate-900`}
+        className={`${kanit.variable} ${poppins.variable} ${prompt.variable} bg-white text-slate-900 antialiased selection:bg-amber-100 selection:text-slate-900`}
       >
-        <Navbar />
-
         <div className="min-h-screen flex flex-col">
+          <Navbar />
+
           <main className="flex-1">{children}</main>
 
-          {/* FOOTER พื้นหลังสีขาว ตัวหนังสือเข้ม อ่านง่าย */}
           <footer className="relative border-t border-slate-200 bg-white text-slate-700">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-10 py-10 md:py-12">
+            <div className="container pt-4 pb-8 md:pt-5 md:pb-9">
               <div className="grid gap-8 md:gap-10 lg:gap-14 md:grid-cols-2 lg:grid-cols-4 items-start">
-                {/* โลโก้ + ข้อความบริษัท */}
                 <div className="space-y-3">
                   <div className="relative h-10 w-40 md:h-12 md:w-52">
                     <Image
@@ -123,19 +113,21 @@ export default function RootLayout({ children }) {
                       alt="SoftNetwork logo"
                       fill
                       className="object-contain"
+                      priority={false}
                     />
                   </div>
+
                   <p className="text-xs md:text-sm text-slate-600 max-w-xs">
                     เรายืนหยัดพัฒนาซอฟต์แวร์ด้านการเงิน เพื่อให้ธุรกิจและองค์กรของคุณ
                     ทำงานได้อย่างมั่นใจในทุกวัน
                   </p>
                 </div>
 
-                {/* Contact Us */}
                 <div className="space-y-3">
                   <h3 className="text-sm md:text-base font-semibold text-slate-900">
                     Contact Us
                   </h3>
+
                   <ul className="space-y-2 text-xs md:text-sm text-slate-700">
                     <li className="flex items-start gap-2">
                       <MapPin className="mt-[2px] h-4 w-4 flex-shrink-0 text-slate-500" />
@@ -146,12 +138,14 @@ export default function RootLayout({ children }) {
                         Our Location, Bangkok, Thailand
                       </Link>
                     </li>
+
                     <li className="flex items-start gap-2">
                       <Phone className="mt-[2px] h-4 w-4 flex-shrink-0 text-slate-500" />
                       <a href="tel:0817504393" className="hover:text-slate-900">
                         081-750-4393
                       </a>
                     </li>
+
                     <li className="flex items-start gap-2">
                       <Mail className="mt-[2px] h-4 w-4 flex-shrink-0 text-slate-500" />
                       <a
@@ -164,11 +158,11 @@ export default function RootLayout({ children }) {
                   </ul>
                 </div>
 
-                {/* Quick Links */}
                 <div className="space-y-3">
                   <h3 className="text-sm md:text-base font-semibold text-slate-900">
                     Quick Links
                   </h3>
+
                   <ul className="space-y-2 text-xs md:text-sm text-slate-700">
                     <li>
                       <Link
@@ -205,11 +199,11 @@ export default function RootLayout({ children }) {
                   </ul>
                 </div>
 
-                {/* Working Hours */}
                 <div className="space-y-3">
                   <h3 className="text-sm md:text-base font-semibold text-slate-900">
                     Working Hours
                   </h3>
+
                   <div className="flex items-start gap-2 text-xs md:text-sm text-slate-700">
                     <Clock className="mt-[2px] h-4 w-4 flex-shrink-0 text-slate-500" />
                     <div>
@@ -234,8 +228,7 @@ export default function RootLayout({ children }) {
 
               <div className="mt-8 border-t border-slate-200" />
               <p className="mt-3 text-[11px] md:text-xs text-slate-500 text-center">
-                Copyright © 2006–2024 SoftNetwork Company Limited. All rights
-                reserved.
+                Copyright © 2006–2024 SoftNetwork Company Limited. All rights reserved.
               </p>
             </div>
           </footer>

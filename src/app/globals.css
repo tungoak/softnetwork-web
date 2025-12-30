@@ -1,11 +1,27 @@
 @import "tailwindcss";
 
-/* ---------- Global Scrollbar ไล่สี 3 สี ---------- */
+/* =========================================================
+   SoftNetwork — Global Styles (Clean + Consistent)
+   ========================================================= */
+
+/* =========================
+   Brand Colors (CSS Vars)
+   ========================= */
+:root {
+  --sn-blue-light: #2a8bea;
+  --sn-blue: #1e6bb8;
+  --sn-orange: #f59e0b;
+  --sn-dark: #1f2a4d;
+}
+
+/* =========================
+   Global Scrollbar (Brand)
+   ========================= */
 html {
   scroll-behavior: smooth;
 }
 
-/* Firefox (ยังไม่รองรับ gradient บน scrollbar) */
+/* Firefox */
 html,
 body {
   scrollbar-width: thin;
@@ -50,31 +66,20 @@ body {
   border-color: #020617;
 }
 
-/* ---------- สีหลักของแบรนด์ ---------- */
-:root {
-  --sn-blue-light: #2a8bea;
-  --sn-blue: #1e6bb8;
-  --sn-orange: #f59e0b;
-  --sn-dark: #1f2a4d;
-}
-
-/* ---------- Base Typography ---------- */
+/* =========================
+   Base Typography
+   ========================= */
 @layer base {
   body {
-    /* ✅ ปรับให้ Kanit เป็นฟอนต์หลัก (ไทยอ่านง่าย) แล้วค่อย fallback ไป Poppins/Prompt/Sarabun */
-    font-family: var(
-        --font-kanit,
-        var(--font-poppins, var(--font-prompt, var(--font-sarabun)))
-      ),
-      system-ui,
-      -apple-system,
-      "Segoe UI",
-      sans-serif;
+    /* Kanit เป็นหลัก, fallback → Poppins/Prompt */
+    font-family: var(--font-kanit, var(--font-poppins, var(--font-prompt))),
+      system-ui, -apple-system, "Segoe UI", sans-serif;
 
     background-color: #ffffff;
     color: #0f172a;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
     font-size: 16px;
     line-height: 1.75;
   }
@@ -83,10 +88,10 @@ body {
   h2,
   h3,
   h4 {
-    /* Heading ใช้ Poppins เป็นหลัก (ดู modern) */
+    /* Heading ใช้ Poppins เป็นหลัก */
     font-family: var(
       --font-poppins,
-      var(--font-kanit, var(--font-prompt, var(--font-sarabun, ui-sans-serif)))
+      var(--font-kanit, var(--font-prompt, ui-sans-serif))
     );
     color: #0f172a;
     line-height: 1.2;
@@ -95,7 +100,6 @@ body {
   h1 {
     font-weight: 900;
   }
-
   h2 {
     font-weight: 800;
   }
@@ -118,140 +122,134 @@ body {
   }
 }
 
-/* helper class */
-.font-kanit {
-  font-family: var(--font-kanit), system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-
-.font-poppins {
-  font-family: var(--font-poppins), system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-
-.font-prompt {
-  font-family: var(--font-prompt), system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-
-.font-sarabun {
-  font-family: "TH Sarabun New", "TH Sarabun PSK", "TH Sarabun IT๙",
-    var(--font-sarabun), system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-
-/* คอนเทนเนอร์กลาง */
-.container {
-  max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 1024px) {
+/* =========================
+   Helpers / Components
+   ========================= */
+@layer components {
+  /* Layout container (consistent spacing everywhere) */
   .container {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
-}
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
 
-/* โลโก้ SoftNetwork แบบ S ส้ม N น้ำเงิน */
-.sn-brand {
-  font-weight: 700;
-  letter-spacing: 0.03em;
-}
-.sn-brand .s {
-  color: var(--sn-orange);
-}
-.sn-brand .n {
-  color: var(--sn-blue);
-}
-.sn-brand .rest {
-  color: var(--sn-dark);
-}
+  /* Font Helpers */
+  .font-kanit {
+    font-family: var(--font-kanit), system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .font-poppins {
+    font-family: var(--font-poppins), system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .font-prompt {
+    font-family: var(--font-prompt), system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
 
-/* เส้นใต้เมนูบน Desktop */
-.nav-underline [data-role="navlink"] {
-  position: relative;
-}
-.nav-underline [data-role="navlink"]::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -6px;
-  height: 2px;
-  width: 0;
-  background: var(--sn-orange);
-  transition: width 0.25s ease;
-}
-.nav-underline [data-role="navlink"]:hover::after {
-  width: 100%;
-}
+  /* Logo SoftNetwork: S ส้ม, N น้ำเงิน */
+  .sn-brand {
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+  .sn-brand .s {
+    color: var(--sn-orange);
+  }
+  .sn-brand .n {
+    color: var(--sn-blue);
+  }
+  .sn-brand .rest {
+    color: var(--sn-dark);
+  }
 
-/* พื้นหลัง Section แบบต่าง ๆ */
-.section-gradient-blue {
-  background: linear-gradient(145deg, #e0f2fe, #dbeafe);
-}
-.section-gradient-orange {
-  background: linear-gradient(145deg, #fff7ed, #fffbeb);
-}
+  /* Desktop nav underline */
+  .nav-underline [data-role="navlink"] {
+    position: relative;
+  }
+  .nav-underline [data-role="navlink"]::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 2px;
+    width: 0;
+    background: var(--sn-orange);
+    transition: width 0.25s ease;
+  }
+  .nav-underline [data-role="navlink"]:hover::after {
+    width: 100%;
+  }
 
-/* Section พื้นหลังน้ำเงินแบบ gradient */
-.section-solid-blue {
-  background-image: linear-gradient(135deg, var(--sn-blue-light), var(--sn-blue));
-  color: #ffffff;
-}
-.section-solid-blue h2,
-.section-solid-blue p {
-  color: #ffffff;
-}
+  /* Section backgrounds */
+  .section-gradient-blue {
+    background: linear-gradient(145deg, #e0f2fe, #dbeafe);
+  }
+  .section-gradient-orange {
+    background: linear-gradient(145deg, #fff7ed, #fffbeb);
+  }
 
-/* การ์ดพื้นฐาน */
-.card-base {
-  border-radius: 1rem;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #e5e7eb;
-  background-color: #ffffff;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.card-base:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(16, 24, 40, 0.12);
-}
+  .section-solid-blue {
+    background-image: linear-gradient(135deg, var(--sn-blue-light), var(--sn-blue));
+    color: #ffffff;
+  }
+  .section-solid-blue h2,
+  .section-solid-blue p {
+    color: #ffffff;
+  }
 
-/* กล่องแบบ glass สำหรับแผนที่ / Contact */
-.glass-panel {
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  background-color: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
-}
+  /* Cards */
+  .card-base {
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card-base:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(16, 24, 40, 0.12);
+  }
 
-/* หัวข้อแต่ละ Section */
-.section-title {
-  font-family: var(
-    --font-poppins,
-    var(--font-kanit, var(--font-prompt, var(--font-sarabun, ui-sans-serif)))
-  );
-  font-size: clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem);
-  letter-spacing: 0.02em;
-}
+  .glass-panel {
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+  }
 
-/* ตัวหนังสือย่อย */
-.subtext {
-  color: #475569;
-}
+  .section-title {
+    font-family: var(--font-poppins, var(--font-kanit, var(--font-prompt, ui-sans-serif)));
+    font-size: clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem);
+    letter-spacing: 0.02em;
+  }
 
-/* ===== Gradient Blue (#2A8BEA → #1E6BB8) ===== */
-.sn-blue-gradient {
-  background-image: linear-gradient(90deg, var(--sn-blue-light), var(--sn-blue));
-}
+  .subtext {
+    color: #475569;
+  }
 
-.sn-blue-pill {
-  background-image: linear-gradient(135deg, var(--sn-blue-light), var(--sn-blue));
-}
+  /* Brand Gradients */
+  .sn-blue-gradient {
+    background-image: linear-gradient(90deg, var(--sn-blue-light), var(--sn-blue));
+  }
+  .sn-blue-pill {
+    background-image: linear-gradient(135deg, var(--sn-blue-light), var(--sn-blue));
+  }
+  .sn-blue-text {
+    color: var(--sn-blue);
+  }
 
-.sn-blue-text {
-  color: var(--sn-blue);
+  /* Orange gradients (TOP BAR ใช้ตัวนี้) */
+  .sn-orange-gradient {
+    background-image: linear-gradient(90deg, var(--sn-orange), #f97316);
+  }
+  .sn-orange-pill {
+    background-image: linear-gradient(135deg, var(--sn-orange), #f97316);
+  }
 }
